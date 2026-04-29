@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Adventure - Learning Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #4FC3F7;
+    --sun: #FFD54F;
+    --grass: #66BB6A;
+    --cloud: #fff;
+    --purple: #CE93D8;
+    --coral: #FF8A65;
+    --mint: #80CBC4;
+    --navy: #1A237E;
+    --card-bg: #FFFDF5;
+    --bg: #E3F2FD;
+    --text: #1A237E;
+    --muted: #5C6BC0;
+    --success: #43A047;
+    --error: #E53935;
+    --warning: #F9A825;
+    --border-r: 18px;
+    --shadow: 0 4px 18px rgba(26,35,126,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image: radial-gradient(circle at 20% 10%, #B3E5FC 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, #E1BEE7 0%, transparent 40%);
+  }
+  h1, h2, h3 { font-family: 'Fredoka One', cursive; letter-spacing: 0.5px; }
+
+  /* NAV */
+  .nav {
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 24px;
+    height: 60px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+  .nav-title { color: #fff; font-size: 22px; flex: 1; }
+  .nav-title span { color: var(--sun); }
+  .nav-btn {
+    background: rgba(255,255,255,0.12);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.22); }
+  .nav-btn.active { background: var(--sun); color: var(--navy); }
+
+  /* PAGES */
+  .page { display: none; padding: 28px 20px 60px; max-width: 760px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 36px 20px 28px;
+  }
+  .hero h1 { font-size: 42px; color: var(--navy); }
+  .hero h1 span { color: var(--coral); }
+  .hero p { color: var(--muted); font-size: 17px; margin: 8px 0 24px; }
+  .start-btn {
+    background: linear-gradient(135deg, #FF8A65, #FF6F00);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    padding: 14px 44px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255,138,101,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+    letter-spacing: 0.5px;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,138,101,0.5); }
+
+  /* TOPIC CARDS */
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .topic-card {
+    background: var(--card-bg);
+    border-radius: var(--border-r);
+    padding: 22px 14px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    border: 2.5px solid transparent;
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    position: relative;
+  }
+  .topic-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(26,35,126,0.14); }
+  .topic-card.selected { border-color: var(--coral); }
+  .topic-icon { font-size: 38px; display: block; margin-bottom: 10px; }
+  .topic-name { font-family: 'Fredoka One', cursive; font-size: 16px; color: var(--navy); }
+  .topic-badge {
+    position: absolute;
+    top: -8px; right: -8px;
+    background: var(--success);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 2px 8px;
+    display: none;
+  }
+  .topic-badge.show { display: block; }
+
+  /* GAME AREA */
+  .game-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .topic-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: var(--navy);
+    flex: 1;
+  }
+  .progress-wrap {
+    background: #C5CAE9;
+    border-radius: 20px;
+    height: 12px;
+    flex: 1;
+    overflow: hidden;
+  }
+  .progress-bar {
+    background: linear-gradient(90deg, #4FC3F7, #7C4DFF);
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.5s;
+  }
+  .score-badge {
+    background: var(--sun);
+    color: var(--navy);
+    font-family: 'Fredoka One', cursive;
+    font-size: 17px;
+    padding: 5px 16px;
+    border-radius: 20px;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--card-bg);
+    border-radius: 22px;
+    padding: 30px 28px;
+    box-shadow: var(--shadow);
+    min-height: 200px;
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: none; } }
+  .q-type-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .tag-listening { background: #E3F2FD; color: #1565C0; }
+  .tag-speaking { background: #E8F5E9; color: #2E7D32; }
+  .tag-selection { background: #FFF3E0; color: #E65100; }
+  .q-text {
+    font-size: 22px;
+    font-family: 'Fredoka One', cursive;
+    color: var(--navy);
+    margin-bottom: 22px;
+    line-height: 1.3;
+  }
+  .q-image {
+    font-size: 64px;
+    display: block;
+    text-align: center;
+    margin: 8px 0 18px;
+  }
+
+  /* OPTIONS */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .opt-btn {
+    background: #EDE7F6;
+    border: 2.5px solid #D1C4E9;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    padding: 14px 10px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    text-align: center;
+  }
+  .opt-btn:hover:not(:disabled) { background: #D1C4E9; transform: scale(1.03); }
+  .opt-btn.correct { background: #C8E6C9; border-color: #43A047; color: #2E7D32; }
+  .opt-btn.wrong { background: #FFCDD2; border-color: #E53935; color: #B71C1C; }
+  .opt-btn:disabled { cursor: default; }
+
+  /* TEXT INPUT */
+  .text-input-row { display: flex; gap: 10px; }
+  .q-input {
+    flex: 1;
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    border: 2.5px solid #B0BEC5;
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: var(--navy);
+    background: #F8F9FA;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .q-input:focus { border-color: var(--sky); }
+  .submit-btn {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 17px;
+    padding: 12px 22px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .submit-btn:hover { background: #283593; transform: scale(1.04); }
+
+  /* FEEDBACK */
+  .feedback-bar {
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    display: none;
+  }
+  .feedback-bar.show { display: flex; align-items: center; gap: 10px; }
+  .feedback-bar.ok { background: #C8E6C9; color: #1B5E20; }
+  .feedback-bar.bad { background: #FFCDD2; color: #B71C1C; }
+
+  /* NEXT BTN */
+  .next-btn {
+    margin-top: 18px;
+    background: var(--coral);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 19px;
+    padding: 12px 38px;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 4px 14px rgba(255,138,101,0.35);
+    transition: transform 0.15s;
+  }
+  .next-btn:hover { transform: scale(1.05); }
+  .next-btn.show { display: inline-block; }
+
+  /* RESULTS */
+  .results-card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 36px 28px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .results-emoji { font-size: 72px; display: block; margin-bottom: 12px; }
+  .results-title { font-size: 34px; color: var(--navy); margin-bottom: 6px; }
+  .results-score { font-size: 48px; color: var(--coral); font-family: 'Fredoka One', cursive; margin: 8px 0; }
+  .results-msg { color: var(--muted); font-size: 16px; margin-bottom: 24px; }
+  .skill-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 18px 0;
+  }
+  .skill-block {
+    background: #F3E5F5;
+    border-radius: 14px;
+    padding: 14px 8px;
+  }
+  .skill-block .sk-name { font-size: 12px; font-weight: 800; letter-spacing: 0.5px; color: #7B1FA2; text-transform: uppercase; }
+  .skill-block .sk-val { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--navy); }
+  .retry-btn {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    padding: 12px 32px;
+    cursor: pointer;
+    margin: 8px;
+    transition: background 0.2s;
+  }
+  .retry-btn:hover { background: #283593; }
+
+  /* TRACKER PAGE */
+  .tracker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .tracker-title { font-size: 26px; }
+  .clear-btn {
+    background: #FFCDD2;
+    color: #B71C1C;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 14px;
+    cursor: pointer;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .sum-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 16px 10px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .sum-card .sum-label { font-size: 12px; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+  .sum-card .sum-val { font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--navy); }
+  .topic-scores { margin-bottom: 28px; }
+  .topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(26,35,126,0.07);
+  }
+  .topic-row .tr-icon { font-size: 24px; }
+  .topic-row .tr-name { font-weight: 700; flex: 1; font-size: 15px; }
+  .topic-row .tr-bar-wrap { flex: 2; background: #E8EAF6; border-radius: 20px; height: 10px; overflow: hidden; }
+  .topic-row .tr-bar { height: 100%; border-radius: 20px; transition: width 0.6s; }
+  .topic-row .tr-pct { font-weight: 800; font-size: 15px; min-width: 38px; text-align: right; }
+  .sessions-table-wrap { overflow-x: auto; }
+  table.sessions {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: var(--card-bg);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  table.sessions th {
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 14px;
+  }
+  table.sessions td { padding: 10px 14px; border-bottom: 1px solid #E8EAF6; color: var(--navy); }
+  table.sessions tr:last-child td { border-bottom: none; }
+  table.sessions tr:hover td { background: #F3E5F5; }
+  .needs-work { background: #FFF3E0; color: #E65100; border-radius: 8px; padding: 2px 8px; font-size: 12px; font-weight: 700; }
+  .strong { background: #E8F5E9; color: #2E7D32; border-radius: 8px; padding: 2px 8px; font-size: 12px; font-weight: 700; }
+  .empty-msg { text-align: center; color: var(--muted); padding: 40px 0; font-size: 16px; }
+
+  /* STARS ANIMATION */
+  .star-burst { position: fixed; pointer-events: none; z-index: 9999; }
+  .star { position: absolute; font-size: 24px; animation: flyUp 1s ease forwards; }
+  @keyframes flyUp {
+    0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(-120px) scale(1.6) rotate(30deg); }
+  }
+
+  /* SPEAKING HINT */
+  .speak-hint {
+    background: #E8F5E9;
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #2E7D32;
+    font-size: 14px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mic-icon { font-size: 20px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <h1 class="nav-title" style="font-family:'Fredoka One',cursive">🌟 <span>English</span> Adventure</h1>
+  <button class="nav-btn active" id="btn-home" onclick="showPage('home')">🏠 Home</button>
+  <button class="nav-btn" id="btn-game" onclick="showPage('game-select')">🎮 Play</button>
+  <button class="nav-btn" id="btn-tracker" onclick="showPage('tracker')">📊 My Progress</button>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <h1>Hello, <span>Superstar!</span> 🌟</h1>
+    <p>Let's practice English and get ready for your test!</p>
+    <button class="start-btn" onclick="showPage('game-select')">🚀 Start Playing!</button>
+  </div>
+  <div style="background:var(--card-bg);border-radius:22px;padding:22px 24px;box-shadow:var(--shadow);margin-top:10px;">
+    <h2 style="font-size:20px;margin-bottom:14px;">📚 What you will practice:</h2>
+    <div class="topic-grid">
+      <div class="topic-card" style="cursor:default">
+        <span class="topic-icon">👋</span>
+        <span class="topic-name">Greetings</span>
+      </div>
+      <div class="topic-card" style="cursor:default">
+        <span class="topic-icon">👋🏾</span>
+        <span class="topic-name">Leave-Takings</span>
+      </div>
+      <div class="topic-card" style="cursor:default">
+        <span class="topic-icon">🙋</span>
+        <span class="topic-name">All About Me</span>
+      </div>
+      <div class="topic-card" style="cursor:default">
+        <span class="topic-icon">🤝</span>
+        <span class="topic-name">Politeness</span>
+      </div>
+      <div class="topic-card" style="cursor:default">
+        <span class="topic-icon">🔢</span>
+        <span class="topic-name">Numbers</span>
+      </div>
+      <div class="topic-card" style="cursor:default">
+        <span class="topic-icon">😊</span>
+        <span class="topic-name">Feelings</span>
+      </div>
+      <div class="topic-card" style="cursor:default">
+        <span class="topic-icon">🔤</span>
+        <span class="topic-name">Letters A, L, S, T</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME SELECT PAGE -->
+<div id="page-game-select" class="page">
+  <h2 style="font-size:26px;margin-bottom:6px;">Choose a Topic 🎯</h2>
+  <p style="color:var(--muted);margin-bottom:20px;">Pick what you want to practice today!</p>
+  <div class="topic-grid" id="topic-grid">
+    <div class="topic-card" onclick="startGame('greetings')">
+      <span class="topic-badge show" id="badge-greetings"></span>
+      <span class="topic-icon">👋</span>
+      <span class="topic-name">Greetings</span>
+    </div>
+    <div class="topic-card" onclick="startGame('leavetakings')">
+      <span class="topic-badge show" id="badge-leavetakings"></span>
+      <span class="topic-icon">👋🏾</span>
+      <span class="topic-name">Leave-Takings</span>
+    </div>
+    <div class="topic-card" onclick="startGame('aboutme')">
+      <span class="topic-badge show" id="badge-aboutme"></span>
+      <span class="topic-icon">🙋</span>
+      <span class="topic-name">All About Me</span>
+    </div>
+    <div class="topic-card" onclick="startGame('politeness')">
+      <span class="topic-badge show" id="badge-politeness"></span>
+      <span class="topic-icon">🤝</span>
+      <span class="topic-name">Politeness</span>
+    </div>
+    <div class="topic-card" onclick="startGame('numbers')">
+      <span class="topic-badge show" id="badge-numbers"></span>
+      <span class="topic-icon">🔢</span>
+      <span class="topic-name">Numbers</span>
+    </div>
+    <div class="topic-card" onclick="startGame('feelings')">
+      <span class="topic-badge show" id="badge-feelings"></span>
+      <span class="topic-icon">😊</span>
+      <span class="topic-name">Feelings</span>
+    </div>
+    <div class="topic-card" onclick="startGame('letters')">
+      <span class="topic-badge show" id="badge-letters"></span>
+      <span class="topic-icon">🔤</span>
+      <span class="topic-name">Letters A, L, S, T</span>
+    </div>
+    <div class="topic-card" onclick="startGame('all')" style="background:linear-gradient(135deg,#FFF3E0,#FFE0B2);border:2.5px solid #FF8A65;">
+      <span class="topic-icon">🌟</span>
+      <span class="topic-name">ALL Topics!</span>
+    </div>
+  </div>
+</div>
+
+<!-- GAME PAGE -->
+<div id="page-game" class="page">
+  <div class="game-header">
+    <span class="topic-label" id="g-topic-label">Greetings 👋</span>
+    <div class="progress-wrap"><div class="progress-bar" id="g-progress" style="width:0%"></div></div>
+    <span class="score-badge">⭐ <span id="g-score">0</span></span>
+  </div>
+  <div id="q-num-label" style="color:var(--muted);font-size:13px;font-weight:700;margin-bottom:10px;"></div>
+  <div class="q-card" id="q-card">
+    <!-- question injected here -->
+  </div>
+  <div class="feedback-bar" id="feedback-bar"></div>
+  <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next ➡️</button>
+</div>
+
+<!-- RESULTS PAGE -->
+<div id="page-results" class="page">
+  <div class="results-card" id="results-card">
+    <span class="results-emoji" id="res-emoji">🎉</span>
+    <h2 class="results-title">Quiz Done!</h2>
+    <div class="results-score" id="res-score">0 / 0</div>
+    <p class="results-msg" id="res-msg"></p>
+    <div class="skill-breakdown">
+      <div class="skill-block">
+        <div class="sk-name">👂 Listening</div>
+        <div class="sk-val" id="sk-listening">—</div>
+      </div>
+      <div class="skill-block" style="background:#E8F5E9">
+        <div class="sk-name" style="color:#2E7D32">🗣️ Speaking</div>
+        <div class="sk-val" id="sk-speaking">—</div>
+      </div>
+      <div class="skill-block" style="background:#FFF3E0">
+        <div class="sk-name" style="color:#E65100">👆 Selection</div>
+        <div class="sk-val" id="sk-selection">—</div>
+      </div>
+    </div>
+    <div id="res-weak-topics" style="margin:14px 0;"></div>
+    <button class="retry-btn" onclick="retryGame()">🔄 Try Again</button>
+    <button class="retry-btn" style="background:var(--grass)" onclick="showPage('game-select')">🎮 New Topic</button>
+    <button class="retry-btn" style="background:#7C4DFF" onclick="showPage('tracker')">📊 See Progress</button>
+  </div>
+</div>
+
+<!-- TRACKER PAGE -->
+<div id="page-tracker" class="page">
+  <div class="tracker-header">
+    <h2 class="tracker-title">📊 Progress Tracker</h2>
+    <button class="clear-btn" onclick="clearHistory()">🗑️ Clear All</button>
+  </div>
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="sum-label">🎮 Sessions</div>
+      <div class="sum-val" id="t-sessions">0</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">⭐ Best Score</div>
+      <div class="sum-val" id="t-best">—</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">✅ Avg Score</div>
+      <div class="sum-val" id="t-avg">—</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-label">❤️ Needs Help</div>
+      <div class="sum-val" id="t-weak" style="color:var(--error);font-size:16px;padding-top:6px;">—</div>
+    </div>
+  </div>
+  <h3 style="font-size:18px;margin-bottom:12px;">Topic Performance</h3>
+  <div id="topic-performance" class="topic-scores"></div>
+  <h3 style="font-size:18px;margin:18px 0 12px;">Session History</h3>
+  <div class="sessions-table-wrap">
+    <table class="sessions" id="sessions-table">
+      <thead>
+        <tr>
+          <th>Date & Time</th>
+          <th>Topic</th>
+          <th>Score</th>
+          <th>👂 Listen</th>
+          <th>🗣️ Speak</th>
+          <th>👆 Select</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="sessions-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// ========= QUESTION BANK =========
+const TOPICS = {
+  greetings: {
+    name: 'Greetings', icon: '👋',
+    questions: [
+      { type:'selection', skill:'selection', q:'Which greeting do you use in the morning? ☀️', opts:['Good morning','Good evening','Good afternoon','Goodbye'], ans:'Good morning' },
+      { type:'selection', skill:'selection', q:'Your friend arrives. What do you say?', opts:['Bye!','Hi!','Good evening','See you later'], ans:'Hi!' },
+      { type:'fill', skill:'speaking', q:'Say hello to your teacher. Fill in: "_______ morning, teacher!"', opts:null, ans:'good' },
+      { type:'selection', skill:'selection', q:'The moon is out 🌙. Which greeting fits?', opts:['Good morning','Good afternoon','Good evening','Hello'], ans:'Good evening' },
+      { type:'selection', skill:'listening', q:'You meet two friends at school. What could they say?', opts:['Hello!','Good night','Goodbye!','See you later'], ans:'Hello!' },
+      { type:'fill', skill:'speaking', q:'Your teacher asks "How are you?" — reply: "I\'m ______."', opts:null, ans:'good' },
+      { type:'selection', skill:'selection', q:'It is 3pm ☀️. What is the right greeting?', opts:['Good morning','Good evening','Good afternoon','Bye'], ans:'Good afternoon' },
+      { type:'selection', skill:'listening', q:'Which of these is NOT a greeting?', opts:['Hi!','Hello!','Good morning','See you later'], ans:'See you later' },
+    ]
+  },
+  leavetakings: {
+    name: 'Leave-Takings', icon: '👋🏾',
+    questions: [
+      { type:'selection', skill:'selection', q:'School is over. What do you say?', opts:['Hello!','Goodbye!','Good morning','How are you?'], ans:'Goodbye!' },
+      { type:'selection', skill:'selection', q:'You will see your friend tomorrow. Say:', opts:['Goodbye forever','See you later!','Good morning','Pardon me'], ans:'See you later!' },
+      { type:'fill', skill:'speaking', q:'Your teacher says "Have a nice ___!"', opts:null, ans:'day' },
+      { type:'selection', skill:'listening', q:'Which phrase means you will meet again?', opts:['Bye','See you later','Thank you','Excuse me'], ans:'See you later' },
+      { type:'selection', skill:'selection', q:'Before you leave, your friend says:', opts:['See you!','Good morning!','Pardon me','I\'m good'], ans:'See you!' },
+      { type:'selection', skill:'listening', q:'Which is a leave-taking expression?', opts:['Hi!','Hello!','Good afternoon','Have a nice day!'], ans:'Have a nice day!' },
+    ]
+  },
+  aboutme: {
+    name: 'All About Me', icon: '🙋',
+    questions: [
+      { type:'fill', skill:'speaking', q:'"What is your name?" — Answer: "My name __ Andrés."', opts:null, ans:'is' },
+      { type:'selection', skill:'selection', q:'"How old are you?" — What is the correct answer?', opts:['I am 6 years old.','I am good.','Yes, I am.','I live in Heredia.'], ans:'I am 6 years old.' },
+      { type:'selection', skill:'listening', q:'"Are you a student?" — What do you say?', opts:['No, I am not.','Yes, I am.','I\'m good.','I\'m 6.'], ans:'Yes, I am.' },
+      { type:'fill', skill:'speaking', q:'"Where are you from?" — "I\'m from Costa ___."', opts:null, ans:'Rica' },
+      { type:'selection', skill:'selection', q:'"Are you in first grade?" — What is the answer?', opts:['Yes, I am.','No, I am not.','I am 6.','I am good.'], ans:'Yes, I am.' },
+      { type:'fill', skill:'speaking', q:'"Where do you live?" — "I live ___ Heredia."', opts:null, ans:'in' },
+      { type:'selection', skill:'selection', q:'How do you say your age? I am ___ years old.', opts:['six','ten','one','eight'], ans:'six' },
+      { type:'selection', skill:'listening', q:'What question asks for your name?', opts:['How old are you?','How are you?','What is your name?','Are you a student?'], ans:'What is your name?' },
+    ]
+  },
+  politeness: {
+    name: 'Politeness', icon: '🤝',
+    questions: [
+      { type:'selection', skill:'selection', q:'You bump into someone. You say:', opts:['Excuse me!','Goodbye!','How are you?','Thank you!'], ans:'Excuse me!' },
+      { type:'selection', skill:'selection', q:'Someone gives you a gift 🎁. You say:', opts:['Pardon me','Thank you!','Goodbye','I\'m good'], ans:'Thank you!' },
+      { type:'fill', skill:'speaking', q:'After "Thank you!" they reply: "You\'re ________."', opts:null, ans:'welcome' },
+      { type:'selection', skill:'listening', q:'You meet a new friend. Say:', opts:['Pardon me!','Nice to meet you!','Excuse me!','Goodbye!'], ans:'Nice to meet you!' },
+      { type:'selection', skill:'selection', q:'"Nice to meet you!" — The reply is:', opts:['Goodbye!','Nice to meet you, too.','Thank you!','Pardon me.'], ans:'Nice to meet you, too.' },
+      { type:'selection', skill:'listening', q:'Which expression asks for forgiveness politely?', opts:['Thank you','You\'re welcome','Pardon me','Nice to meet you'], ans:'Pardon me' },
+      { type:'fill', skill:'speaking', q:'Someone sneezes. Say: "Excuse ___!"', opts:null, ans:'me' },
+    ]
+  },
+  numbers: {
+    name: 'Numbers', icon: '🔢',
+    questions: [
+      { type:'selection', skill:'selection', q:'🌎 How many globes? (Count: 1)', opts:['one','two','three','four'], ans:'one' },
+      { type:'selection', skill:'selection', q:'How do you write 8 in words?', opts:['six','seven','eight','nine'], ans:'eight' },
+      { type:'fill', skill:'speaking', q:'5 clocks = "_____ clocks"', opts:null, ans:'five' },
+      { type:'selection', skill:'selection', q:'How do you say the number 10?', opts:['seven','nine','ten','six'], ans:'ten' },
+      { type:'selection', skill:'listening', q:'Which number comes after 6?', opts:['five','six','seven','eight'], ans:'seven' },
+      { type:'fill', skill:'speaking', q:'Count: 1, 2, 3, 4, ___', opts:null, ans:'five' },
+      { type:'selection', skill:'selection', q:'4 glasses = how many?', opts:['three','four','five','six'], ans:'four' },
+      { type:'selection', skill:'selection', q:'9 in words is:', opts:['seven','eight','nine','ten'], ans:'nine' },
+      { type:'selection', skill:'listening', q:'Which number comes before 3?', opts:['four','two','one','five'], ans:'two' },
+      { type:'fill', skill:'speaking', q:'6 candies = "___ candies"', opts:null, ans:'six' },
+    ]
+  },
+  feelings: {
+    name: 'Feelings', icon: '😊',
+    questions: [
+      { type:'selection', skill:'selection', q:'😢 This face shows you feel:', opts:['happy','sad','angry','tired'], ans:'sad' },
+      { type:'selection', skill:'selection', q:'😨 You are ___:', opts:['sad','tired','scared','angry'], ans:'scared' },
+      { type:'fill', skill:'speaking', q:'😪 "I feel ___." (very sleepy)', opts:null, ans:'tired' },
+      { type:'selection', skill:'listening', q:'😠 "I feel ___."', opts:['scared','tired','angry','sad'], ans:'angry' },
+      { type:'selection', skill:'selection', q:'Complete: "I feel ___." (very happy!)', opts:['sad','tired','good','scared'], ans:'good' },
+      { type:'fill', skill:'speaking', q:'How do you say you are sad? "I feel ___."', opts:null, ans:'sad' },
+      { type:'selection', skill:'selection', q:'Which word means NOT calm?', opts:['tired','sad','scared','angry'], ans:'angry' },
+    ]
+  },
+  letters: {
+    name: 'Letters A, L, S, T', icon: '🔤',
+    questions: [
+      { type:'selection', skill:'selection', q:'Which word starts with the /a/ sound? 🐊', opts:['lion','table','alligator','snake'], ans:'alligator' },
+      { type:'selection', skill:'selection', q:'Which word starts with /s/? 🐍', opts:['lemon','ant','table','snake'], ans:'snake' },
+      { type:'fill', skill:'speaking', q:'The letter that makes the sound /l/ like in "lion" is: ___', opts:null, ans:'L' },
+      { type:'selection', skill:'listening', q:'Which word starts with /t/? 🪑', opts:['ant','table','lemon','six'], ans:'table' },
+      { type:'selection', skill:'selection', q:'🐜 "Ant" starts with the letter:', opts:['S','T','L','A'], ans:'A' },
+      { type:'selection', skill:'selection', q:'The number SIX starts with the sound:', opts:['/a/','/l/','/s/','/t/'], ans:'/s/' },
+      { type:'fill', skill:'speaking', q:'"Lemon" starts with the letter: ___', opts:null, ans:'L' },
+      { type:'selection', skill:'listening', q:'Which word starts with /m/ sound?', opts:['egg','eight','me','ant'], ans:'me' },
+      { type:'selection', skill:'selection', q:'🍋 Lemon, lion, love — they all start with:', opts:['A','S','T','L'], ans:'L' },
+      { type:'fill', skill:'speaking', q:'"Table" and "ten" and "tall" start with letter: ___', opts:null, ans:'T' },
+    ]
+  }
+};
+
+// ========= GAME STATE =========
+let currentTopic = null;
+let allQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+let skillStats = {};
+let sessions = JSON.parse(localStorage.getItem('eng_sessions') || '[]');
+let topicStats = JSON.parse(localStorage.getItem('eng_topic_stats') || '{}');
+
+function shuffle(arr) {
+  let a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    let j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const map = {'home':'btn-home','game-select':'btn-game','game':'btn-game','results':'btn-game','tracker':'btn-tracker'};
+  const btn = document.getElementById(map[id]);
+  if (btn) btn.classList.add('active');
+  if (id === 'tracker') renderTracker();
+  if (id === 'game-select') renderBadges();
+}
+
+function renderBadges() {
+  Object.keys(TOPICS).forEach(k => {
+    const b = document.getElementById('badge-'+k);
+    if (!b) return;
+    const st = topicStats[k];
+    if (st && st.sessions > 0) {
+      const pct = Math.round(st.totalScore / st.sessions);
+      b.textContent = pct + '%';
+      b.style.background = pct >= 70 ? '#43A047' : pct >= 50 ? '#F9A825' : '#E53935';
+      b.style.display = 'block';
+    } else {
+      b.style.display = 'none';
+    }
+  });
+}
+
+function startGame(topicKey) {
+  currentTopic = topicKey;
+  if (topicKey === 'all') {
+    allQuestions = [];
+    Object.keys(TOPICS).forEach(k => {
+      allQuestions = allQuestions.concat(TOPICS[k].questions.map(q => ({...q, topic: k})));
+    });
+    allQuestions = shuffle(allQuestions).slice(0, 14);
+  } else {
+    allQuestions = shuffle(TOPICS[topicKey].questions);
+  }
+  currentIndex = 0;
+  score = 0;
+  skillStats = { listening: {c:0,t:0}, speaking: {c:0,t:0}, selection: {c:0,t:0} };
+  answered = false;
+  showPage('game');
+  const label = topicKey === 'all' ? '🌟 ALL Topics!' : TOPICS[topicKey].icon + ' ' + TOPICS[topicKey].name;
+  document.getElementById('g-topic-label').textContent = label;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = allQuestions[currentIndex];
+  const total = allQuestions.length;
+  document.getElementById('g-score').textContent = score;
+  document.getElementById('g-progress').style.width = (currentIndex/total*100) + '%';
+  document.getElementById('q-num-label').textContent = `Question ${currentIndex+1} of ${total}`;
+  document.getElementById('feedback-bar').className = 'feedback-bar';
+  document.getElementById('next-btn').className = 'next-btn';
+  answered = false;
+
+  let skillTag = '';
+  if (q.skill === 'listening') skillTag = '<span class="q-type-tag tag-listening">👂 Listening</span>';
+  else if (q.skill === 'speaking') skillTag = '<span class="q-type-tag tag-speaking">🗣️ Speaking</span>';
+  else skillTag = '<span class="q-type-tag tag-selection">👆 Selection</span>';
+
+  let bodyHTML = '';
+  if (q.type === 'selection') {
+    const shuffledOpts = shuffle(q.opts);
+    bodyHTML = `
+      ${q.skill === 'speaking' ? '<div class="speak-hint"><span class="mic-icon">🔊</span> Say the answer out loud, then choose!</div>' : ''}
+      <div class="options-grid">
+        ${shuffledOpts.map(o => `<button class="opt-btn" onclick="checkAnswer('${o.replace(/'/g,"\\'")}', this)">${o}</button>`).join('')}
+      </div>`;
+  } else {
+    bodyHTML = `
+      <div class="speak-hint"><span class="mic-icon">🗣️</span> Say your answer out loud first, then type it!</div>
+      <div class="text-input-row">
+        <input class="q-input" id="q-fill-input" type="text" placeholder="Type your answer..." />
+        <button class="submit-btn" onclick="checkFill()">✓ Check</button>
+      </div>`;
+  }
+
+  document.getElementById('q-card').innerHTML = `
+    ${skillTag}
+    <div class="q-text">${q.q}</div>
+    ${bodyHTML}
+  `;
+
+  if (q.type === 'fill') {
+    const inp = document.getElementById('q-fill-input');
+    inp.addEventListener('keydown', e => { if(e.key==='Enter') checkFill(); });
+    inp.focus();
+  }
+}
+
+function checkAnswer(chosen, btn) {
+  if (answered) return;
+  answered = true;
+  const q = allQuestions[currentIndex];
+  skillStats[q.skill].t++;
+  const correct = chosen.toLowerCase().trim() === q.ans.toLowerCase().trim();
+  document.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    if (b.textContent.toLowerCase().trim() === q.ans.toLowerCase().trim()) b.classList.add('correct');
+  });
+  if (!correct) { btn.classList.add('wrong'); }
+  else {
+    score++;
+    skillStats[q.skill].c++;
+    if (q.skill !== 'speaking') spawnStars();
+  }
+  showFeedback(correct, q.ans);
+}
+
+function checkFill() {
+  if (answered) return;
+  const inp = document.getElementById('q-fill-input');
+  const val = inp.value.trim();
+  if (!val) return;
+  answered = true;
+  const q = allQuestions[currentIndex];
+  skillStats[q.skill].t++;
+  const correct = val.toLowerCase() === q.ans.toLowerCase();
+  inp.disabled = true;
+  inp.style.borderColor = correct ? 'var(--success)' : 'var(--error)';
+  if (correct) { score++; skillStats[q.skill].c++; spawnStars(); }
+  showFeedback(correct, q.ans);
+}
+
+function showFeedback(correct, ans) {
+  const fb = document.getElementById('feedback-bar');
+  if (correct) {
+    fb.className = 'feedback-bar show ok';
+    fb.innerHTML = '✅ Fantastic! Well done! 🌟';
+  } else {
+    fb.className = 'feedback-bar show bad';
+    fb.innerHTML = `❌ Not quite! The answer is: <strong>${ans}</strong> — keep trying!`;
+  }
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= allQuestions.length) {
+    finishGame();
+  } else {
+    renderQuestion();
+  }
+}
+
+function finishGame() {
+  const total = allQuestions.length;
+  const pct = Math.round(score/total*100);
+
+  // Save session
+  const topicKey = currentTopic;
+  const now = new Date();
+  const session = {
+    date: now.toLocaleDateString('es-CR') + ' ' + now.toLocaleTimeString('es-CR', {hour:'2-digit',minute:'2-digit'}),
+    topic: topicKey === 'all' ? 'All Topics' : TOPICS[topicKey]?.name,
+    topicKey,
+    score, total, pct,
+    listening: skillStats.listening,
+    speaking: skillStats.speaking,
+    selection: skillStats.selection,
+    weakAreas: getWeakAreas()
+  };
+  sessions.unshift(session);
+  if (sessions.length > 50) sessions.pop();
+  localStorage.setItem('eng_sessions', JSON.stringify(sessions));
+
+  // Update topic stats
+  if (topicKey !== 'all') {
+    if (!topicStats[topicKey]) topicStats[topicKey] = { sessions:0, totalScore:0 };
+    topicStats[topicKey].sessions++;
+    topicStats[topicKey].totalScore += pct;
+    localStorage.setItem('eng_topic_stats', JSON.stringify(topicStats));
+  }
+
+  // Render results
+  const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '😊' : '💪';
+  const msg = pct >= 80 ? 'Amazing job! You are a star! 🌟' : pct >= 60 ? 'Good effort! Keep practicing! 📚' : 'Keep trying! You will get better! 💪';
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-score').textContent = score + ' / ' + total + ' (' + pct + '%)';
+  document.getElementById('res-msg').textContent = msg;
+
+  const fmtSkill = (sk) => {
+    const s = skillStats[sk];
+    if (s.t === 0) return '—';
+    return s.c + '/' + s.t;
+  };
+  document.getElementById('sk-listening').textContent = fmtSkill('listening');
+  document.getElementById('sk-speaking').textContent = fmtSkill('speaking');
+  document.getElementById('sk-selection').textContent = fmtSkill('selection');
+
+  const weak = getWeakAreas();
+  document.getElementById('res-weak-topics').innerHTML = weak.length
+    ? `<div style="background:#FFF3E0;border-radius:12px;padding:12px 16px;color:#E65100;font-size:14px;font-weight:700;">⚠️ Practice more: ${weak.join(', ')}</div>`
+    : `<div style="background:#E8F5E9;border-radius:12px;padding:12px 16px;color:#2E7D32;font-size:14px;font-weight:700;">✅ Great job on all skills!</div>`;
+
+  showPage('results');
+  if (pct >= 70) spawnStars(12);
+}
+
+function getWeakAreas() {
+  const weak = [];
+  ['listening','speaking','selection'].forEach(sk => {
+    const s = skillStats[sk];
+    if (s.t > 0 && s.c/s.t < 0.6) weak.push(sk.charAt(0).toUpperCase()+sk.slice(1));
+  });
+  return weak;
+}
+
+function retryGame() { startGame(currentTopic); }
+
+function spawnStars(count=5) {
+  const burst = document.createElement('div');
+  burst.className = 'star-burst';
+  burst.style.cssText = `left:${Math.random()*80+10}%;top:${Math.random()*60+20}%;`;
+  for (let i=0; i<count; i++) {
+    const s = document.createElement('span');
+    s.className = 'star';
+    s.textContent = ['⭐','🌟','✨','🎉'][Math.floor(Math.random()*4)];
+    s.style.cssText = `left:${Math.random()*80-40}px;top:0;animation-delay:${i*0.1}s;`;
+    burst.appendChild(s);
+  }
+  document.body.appendChild(burst);
+  setTimeout(() => burst.remove(), 1400);
+}
+
+// ========= TRACKER =========
+function renderTracker() {
+  const tbody = document.getElementById('sessions-body');
+  if (sessions.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-msg">No sessions yet! Play some games first 🎮</td></tr>';
+    document.getElementById('t-sessions').textContent = 0;
+    document.getElementById('t-best').textContent = '—';
+    document.getElementById('t-avg').textContent = '—';
+    document.getElementById('t-weak').textContent = '—';
+    document.getElementById('topic-performance').innerHTML = '<p class="empty-msg">Play some topics to see your performance here!</p>';
+    return;
+  }
+
+  document.getElementById('t-sessions').textContent = sessions.length;
+  const scores = sessions.map(s=>s.pct);
+  document.getElementById('t-best').textContent = Math.max(...scores) + '%';
+  document.getElementById('t-avg').textContent = Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) + '%';
+
+  // Weak areas from all sessions
+  const weakCounts = {};
+  sessions.forEach(s => {
+    (s.weakAreas||[]).forEach(w => { weakCounts[w] = (weakCounts[w]||0)+1; });
+  });
+  const topWeak = Object.entries(weakCounts).sort((a,b)=>b[1]-a[1]).map(e=>e[0]);
+  document.getElementById('t-weak').textContent = topWeak.length ? topWeak.slice(0,2).join(', ') : 'None 🎉';
+
+  // Topic performance
+  const perf = {};
+  Object.keys(TOPICS).forEach(k => {
+    const topSessions = sessions.filter(s => s.topicKey === k);
+    if (topSessions.length > 0) {
+      perf[k] = Math.round(topSessions.reduce((a,s)=>a+s.pct,0)/topSessions.length);
+    }
+  });
+  const colorForPct = p => p>=70 ? '#43A047' : p>=50 ? '#F9A825' : '#E53935';
+  document.getElementById('topic-performance').innerHTML = Object.keys(perf).map(k => `
+    <div class="topic-row">
+      <span class="tr-icon">${TOPICS[k].icon}</span>
+      <span class="tr-name">${TOPICS[k].name}</span>
+      <div class="tr-bar-wrap"><div class="tr-bar" style="width:${perf[k]}%;background:${colorForPct(perf[k])}"></div></div>
+      <span class="tr-pct" style="color:${colorForPct(perf[k])}">${perf[k]}%</span>
+    </div>
+  `).join('') || '<p class="empty-msg">Play some topics to see performance!</p>';
+
+  // Sessions table
+  tbody.innerHTML = sessions.map(s => {
+    const lPct = s.listening && s.listening.t>0 ? Math.round(s.listening.c/s.listening.t*100)+'%' : '—';
+    const spPct = s.speaking && s.speaking.t>0 ? Math.round(s.speaking.c/s.speaking.t*100)+'%' : '—';
+    const sePct = s.selection && s.selection.t>0 ? Math.round(s.selection.c/s.selection.t*100)+'%' : '—';
+    const statusTag = s.pct >= 70 ? `<span class="strong">✅ Strong</span>` : `<span class="needs-work">⚠️ Practice</span>`;
+    return `<tr>
+      <td>${s.date}</td>
+      <td>${s.topic}</td>
+      <td><strong>${s.score}/${s.total} (${s.pct}%)</strong></td>
+      <td>${lPct}</td>
+      <td>${spPct}</td>
+      <td>${sePct}</td>
+      <td>${statusTag}</td>
+    </tr>`;
+  }).join('');
+}
+
+function clearHistory() {
+  if (!confirm('Clear all progress? This cannot be undone.')) return;
+  sessions = [];
+  topicStats = {};
+  localStorage.removeItem('eng_sessions');
+  localStorage.removeItem('eng_topic_stats');
+  renderTracker();
+  renderBadges();
+}
+
+// INIT
+renderBadges();
+</script>
+</body>
+</html>
