@@ -1,333 +1,296 @@
 // ============================================================
-//  APP ENGINE — Navigation, Quiz, Tracker
+//  app.js — Main application controller
+//  Escuela Ramón Barrantes Herrera
 // ============================================================
 
-// ---- STATE ----
+// ── State ────────────────────────────────────────────────────
 let state = {
-  student: null,
-  subject: null,
-  unit: null,
-  topic: null,
-  questions: [],
+  student: null,      // STUDENTS entry
+  subject: null,      // SUBJECTS entry
+  unit: null,         // unit object from subject.units[]
+  questions: [],      // shuffled questions for current quiz
   qIndex: 0,
   score: 0,
   answered: false,
-  skillStats: {},
-  trackerFilter: 'all',
+  sessionResults: []  // { studentId, subjectId, unitId, correct, total, date }
 };
 
-// ---- INIT ----
-document.addEventListener('DOMContentLoaded', () => {
-  mergeExtraContent();
-  showScreen('screen-home');
-  renderHome();
-});
+// ── localStorage helpers ─────────────────────────────────────
+const STORAGE_KEY = 'mis_estudios_history_v1';
 
-function mergeExtraContent() {
-  if (!window.CONTENT_EXTRA) return;
-  // Andrés English
-  if (CONTENT_EXTRA.andres_english)
-    CONTENT.andres.english = CONTENT_EXTRA.andres_english;
-  // Fernando English
-  if (CONTENT_EXTRA.fernando_english)
-    CONTENT.fernando.english = CONTENT_EXTRA.fernando_english;
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveHistory(history) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+}
+function addSession(session) {
+  const h = loadHistory();
+  h.unshift(session);
+  saveHistory(h.slice(0, 200)); // keep last 200 sessions
+}
+function clearHistory() {
+  if (!confirm('¿Borrar todo el historial de progreso?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  renderTracker();
 }
 
-// ---- SCREEN ROUTER ----
+// ── Screen management ────────────────────────────────────────
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
+  document.getElementById('screen-' + id).classList.add('active');
 }
 
-// ============================================================
-//  HOME — Student Picker
-// ============================================================
+// ── HOME ─────────────────────────────────────────────────────
 function renderHome() {
   const grid = document.getElementById('home-student-grid');
-  grid.innerHTML = STUDENTS.map(st => {
-    const sessions = getSessions().filter(s => s.studentId === st.id);
-    const avg = sessions.length
-      ? Math.round(sessions.reduce((a,s) => a+s.pct, 0) / sessions.length)
-      : null;
-    return `
-      <div class="student-card" data-student="${st.id}" onclick="selectStudent('${st.id}')">
-        <span class="student-avatar">${st.avatar}</span>
-        <div class="student-name">${st.name}</div>
-        <div class="student-grade">${st.grade}</div>
-        <div class="student-score-preview">
-          ${avg !== null ? `⭐ Avg: ${avg}%` : '¡Empieza a jugar!'}
-        </div>
-      </div>`;
-  }).join('');
+  grid.innerHTML = STUDENTS.map(st => `
+    <button class="student-card" onclick="selectStudent('${st.id}')"
+      style="--accent:${st.color}">
+      <span class="sc-avatar">${st.avatar}</span>
+      <span class="sc-name">${st.name}</span>
+      <span class="sc-grade">${st.grade}</span>
+    </button>
+  `).join('');
 }
 
-// ============================================================
-//  SUBJECT PICKER
-// ============================================================
-function selectStudent(studentId) {
-  state.student = STUDENTS.find(s => s.id === studentId);
-  document.getElementById('subj-avatar').textContent = state.student.avatar;
-  document.getElementById('subj-name').textContent = state.student.name;
-  document.getElementById('subj-grade').textContent = state.student.grade;
+function selectStudent(id) {
+  state.student = STUDENTS.find(s => s.id === id);
   renderSubjects();
-  showScreen('screen-subjects');
+  showScreen('subjects');
 }
 
+function goHome() {
+  state.student = null;
+  state.subject = null;
+  state.unit = null;
+  showScreen('home');
+}
+
+// ── SUBJECTS ─────────────────────────────────────────────────
 function renderSubjects() {
   const st = state.student;
-  const studentContent = CONTENT[st.id];
+  document.getElementById('subj-avatar').textContent = st.avatar;
+  document.getElementById('subj-name').textContent = st.name;
+  document.getElementById('subj-grade').textContent = st.grade;
+
   const grid = document.getElementById('subj-grid');
-
-  grid.innerHTML = SUBJECTS.map(subj => {
-    const subjContent = studentContent[subj.id];
-    const hasUnits = subjContent && subjContent.units && subjContent.units.length > 0;
-    const hasActive = hasUnits && subjContent.units.some(u => u.status === 'active');
-
-    // Get avg score for this subject
-    const sessions = getSessions().filter(s => s.studentId === st.id && s.subjectId === subj.id);
-    const avg = sessions.length
-      ? Math.round(sessions.reduce((a,s) => a+s.pct,0)/sessions.length)
-      : null;
-
-    const statusLabel = hasActive ? `<span class="subj-status status-active">✅ Active</span>`
-                                   : `<span class="subj-status status-coming">🔒 Coming soon</span>`;
-    const locked = !hasActive ? 'locked' : '';
-    const click = hasActive ? `onclick="selectSubject('${subj.id}')"` : '';
-
+  grid.innerHTML = st.subjects.map(sid => {
+    const subj = SUBJECTS[sid];
+    if (!subj) return '';
     return `
-      <div class="subject-card ${locked}" ${click} style="border-top: 5px solid ${subj.color}">
-        <span class="subj-icon">${subj.icon}</span>
-        <div class="subj-name" style="color:${subj.color}">${subj.name}</div>
-        ${statusLabel}
-        ${avg !== null ? `<div style="font-size:12px;color:#5C6BC0;font-weight:700;margin-top:6px;">⭐ ${avg}%</div>` : ''}
-      </div>`;
+      <button class="subject-card" onclick="selectSubject('${sid}')"
+        style="--accent:${subj.color};--accent-light:${subj.colorLight}">
+        <span class="sj-emoji">${subj.label.split(' ')[0]}</span>
+        <span class="sj-label">${subj.label.replace(/^\S+\s/, '')}</span>
+        <span class="sj-desc">${subj.description}</span>
+      </button>
+    `;
   }).join('');
 }
 
-// ============================================================
-//  TOPIC LIST
-// ============================================================
-function selectSubject(subjectId) {
-  state.subject = SUBJECTS.find(s => s.id === subjectId);
-  const studentContent = CONTENT[state.student.id][subjectId];
-  state.unit = studentContent.units[0]; // for now show first unit
-  renderTopicList();
-  showScreen('screen-topics');
+function selectSubject(sid) {
+  state.subject = SUBJECTS[sid];
+  renderTopics();
+  showScreen('topics');
 }
 
-function renderTopicList() {
-  const st = state.student;
-  const unit = state.unit;
+function goSubjects() {
+  state.unit = null;
+  renderSubjects();
+  showScreen('subjects');
+}
+
+// ── TOPICS ───────────────────────────────────────────────────
+function renderTopics() {
   const subj = state.subject;
+  document.getElementById('topics-unit-title').textContent = subj.label;
+  document.getElementById('topics-unit-theme').textContent = subj.description;
+  document.getElementById('topics-unit-eq').textContent = '';
 
-  document.getElementById('topics-unit-title').textContent = unit.title;
-  document.getElementById('topics-unit-theme').textContent = '📌 ' + unit.theme;
-  document.getElementById('topics-unit-eq').textContent = '❓ ' + unit.essentialQuestion;
-
+  const history = loadHistory();
   const list = document.getElementById('topic-list');
-  list.innerHTML = unit.topics.map(topic => {
-    const best = getTopicBest(st.id, subj.id, topic.id);
-    let badge = '';
-    if (best === null) badge = `<span class="t-badge badge-new">⭐ New</span>`;
-    else if (best >= 80) badge = `<span class="t-badge badge-good">🏆 ${best}%</span>`;
-    else if (best >= 60) badge = `<span class="t-badge badge-ok">👍 ${best}%</span>`;
-    else badge = `<span class="t-badge badge-retry">🔄 ${best}%</span>`;
 
-    const qCount = topic.questions ? topic.questions.length : 0;
+  if (!subj.units || subj.units.length === 0) {
+    list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px 0;">Próximamente — contenido en preparación.</p>';
+    return;
+  }
+
+  list.innerHTML = subj.units.map(unit => {
+    // Calculate best score for this unit
+    const sessions = history.filter(s =>
+      s.studentId === state.student.id &&
+      s.subjectId === state.subject.id &&
+      s.unitId === unit.id
+    );
+    const best = sessions.length
+      ? Math.max(...sessions.map(s => Math.round(s.correct / s.total * 100)))
+      : null;
+    const badge = best !== null
+      ? `<span class="topic-badge" style="background:${best >= 80 ? '#dcfce7' : best >= 50 ? '#fef9c3' : '#fee2e2'};color:${best >= 80 ? '#166534' : best >= 50 ? '#92400e' : '#991b1b'}">${best}%</span>`
+      : `<span class="topic-badge" style="background:#f1f5f9;color:#64748b">Nuevo</span>`;
+
     return `
-      <div class="topic-row" onclick="selectTopic('${topic.id}')">
-        <span class="t-icon">${topic.icon}</span>
-        <div class="t-info">
-          <div class="t-title">${topic.title}</div>
-          <div class="t-subtitle">${qCount} questions</div>
+      <button class="topic-item" onclick="selectUnit('${unit.id}')"
+        style="--accent:${unit.color};--accent-light:${unit.colorLight}">
+        <span class="ti-emoji">${unit.emoji}</span>
+        <div class="ti-info">
+          <span class="ti-title">${unit.title}</span>
+          <span class="ti-theme">${unit.theme}</span>
         </div>
         ${badge}
-        <span class="topic-arrow">›</span>
-      </div>`;
+      </button>
+    `;
   }).join('');
 }
 
-// ============================================================
-//  STUDY VIEW
-// ============================================================
-function selectTopic(topicId) {
-  state.topic = state.unit.topics.find(t => t.id === topicId);
-  document.getElementById('study-title').textContent = state.topic.icon + ' ' + state.topic.title;
-  document.getElementById('study-content').innerHTML = state.topic.content;
-  showScreen('screen-study');
+function selectUnit(uid) {
+  state.unit = state.subject.units.find(u => u.id === uid);
+  renderStudy();
+  showScreen('study');
 }
 
-// ============================================================
-//  QUIZ ENGINE
-// ============================================================
+function goToTopics() {
+  renderTopics();
+  showScreen('topics');
+}
+
+// ── STUDY ────────────────────────────────────────────────────
+function renderStudy() {
+  const unit = state.unit;
+  document.getElementById('study-title').textContent = `${unit.emoji} ${unit.title}`;
+  document.getElementById('study-content').innerHTML = unit.studyNotes || '<p>Notas de estudio próximamente.</p>';
+}
+
 function startQuiz() {
-  const topic = state.topic;
-  state.questions = shuffle([...topic.questions]);
+  if (!state.unit || !state.unit.questions || state.unit.questions.length === 0) {
+    alert('No hay preguntas disponibles para este tema.');
+    return;
+  }
+  // Shuffle questions, take up to 10
+  const shuffled = [...state.unit.questions].sort(() => Math.random() - 0.5).slice(0, 10);
+  state.questions = shuffled;
   state.qIndex = 0;
   state.score = 0;
   state.answered = false;
-  state.skillStats = { listening:{c:0,t:0}, speaking:{c:0,t:0}, selection:{c:0,t:0} };
-  showScreen('screen-quiz');
+
+  document.getElementById('quiz-topic-label').textContent = `${state.unit.emoji} ${state.unit.title}`;
+  document.getElementById('quiz-score').textContent = '0';
+
   renderQuestion();
+  showScreen('quiz');
 }
 
+// ── QUIZ ─────────────────────────────────────────────────────
 function renderQuestion() {
   const q = state.questions[state.qIndex];
   const total = state.questions.length;
-
-  document.getElementById('quiz-score').textContent = state.score;
-  document.getElementById('quiz-progress').style.width = (state.qIndex/total*100) + '%';
-  document.getElementById('quiz-qnum').textContent = `Question ${state.qIndex+1} of ${total}`;
-  document.getElementById('quiz-topic-label').textContent = state.topic.icon + ' ' + state.topic.title;
-
-  const fb = document.getElementById('quiz-feedback');
-  fb.className = 'feedback-bar';
-  document.getElementById('quiz-next').className = 'next-btn';
   state.answered = false;
 
-  const skillMap = { listening:'👂 Listening', speaking:'🗣️ Speaking', selection:'👆 Selection' };
-  const tagClass = { listening:'tag-listening', speaking:'tag-speaking', selection:'tag-selection' };
+  document.getElementById('quiz-qnum').textContent = `Pregunta ${state.qIndex + 1} de ${total}`;
+  document.getElementById('quiz-progress').style.width = ((state.qIndex / total) * 100) + '%';
+  document.getElementById('quiz-feedback').innerHTML = '';
+  document.getElementById('quiz-feedback').className = 'feedback-bar';
 
-  let inner = `
-    <span class="skill-tag ${tagClass[q.skill]}">${skillMap[q.skill]}</span>
+  const next = document.getElementById('quiz-next');
+  next.style.display = 'none';
+
+  const card = document.getElementById('q-card');
+  card.innerHTML = `
+    <div class="q-text">${q.text}</div>
+    ${renderQuizInput(q)}
   `;
+}
 
-  if (q.type === 'picture') {
-    // Big picture options for 1st grade
-    inner += `<div class="q-text-big">${q.q}</div>
-      <div class="pic-opts-grid">
-        ${shuffle([...q.opts]).map(opt => `
-          <button class="pic-opt" onclick="checkPicture('${escapeSingle(opt.l)}')" data-val="${escapeSingle(opt.l)}">
-            <span class="po-emoji">${opt.e}</span>
-            <span class="po-label">${opt.l}</span>
-          </button>`).join('')}
-      </div>`;
-
-  } else if (q.type === 'tap') {
-    // Tap the picture — pre-kinder
-    inner += `<div class="q-text-big">${q.q}</div>
-      <div class="tap-grid">
-        ${shuffle([...q.opts]).map(opt => `
-          <button class="tap-card" onclick="checkTap('${escapeSingle(opt.l)}')" data-val="${escapeSingle(opt.l)}">
-            <span class="tc-emoji">${opt.e}</span>
-            <span class="tc-label">${opt.l}</span>
-          </button>`).join('')}
-      </div>`;
-
-  } else if (q.type === 'selection') {
-    // Standard 4-option
-    inner += `<div class="q-text">${q.q}</div>
-      <div class="opts-grid">
-        ${shuffle([...q.opts]).map(opt => `
-          <button class="opt-btn" onclick="checkAnswer('${escapeSingle(opt)}')">${opt}</button>`).join('')}
-      </div>`;
-
-  } else if (q.type === 'fill') {
-    inner += `<div class="q-text">${q.q}</div>
-      ${q.skill === 'speaking' ? '<div class="speak-hint" style="background:#E8F5E9;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;color:#2E7D32;margin-bottom:12px;">🗣️ Say your answer first, then type it!</div>' : ''}
-      <div class="fill-row">
-        <input class="fill-input" id="fill-input" type="text" placeholder="Type here..." autocomplete="off" />
-        <button class="check-btn" onclick="checkFill()">✓</button>
-      </div>`;
+function renderQuizInput(q) {
+  if (q.type === 'mc') {
+    return `<div class="quiz-options">${
+      q.options.map((opt, i) => `
+        <button class="quiz-opt" data-idx="${i}" onclick="handleMC(${i})">
+          <span class="quiz-opt-letter">${String.fromCharCode(65+i)}</span>
+          <span>${opt}</span>
+        </button>
+      `).join('')
+    }</div>`;
   }
-
-  document.getElementById('q-card').innerHTML = inner;
-
+  if (q.type === 'tf') {
+    return `<div class="quiz-tf-row">
+      <button class="quiz-tf-btn" onclick="handleTF(true)">✅ Verdadero</button>
+      <button class="quiz-tf-btn" onclick="handleTF(false)">❌ Falso</button>
+    </div>`;
+  }
   if (q.type === 'fill') {
-    const inp = document.getElementById('fill-input');
-    inp.addEventListener('keydown', e => { if(e.key==='Enter') checkFill(); });
-    setTimeout(() => inp.focus(), 100);
+    return `<div class="quiz-fill-row">
+      <input class="quiz-fill-input" id="quiz-fill" type="text" placeholder="Escribe tu respuesta..."
+        onkeydown="if(event.key==='Enter') handleFill()">
+      <button class="quiz-check-btn" onclick="handleFill()">✔ Verificar</button>
+    </div>`;
   }
+  return '';
 }
 
-function checkAnswer(chosen) {
+function handleMC(chosen) {
   if (state.answered) return;
   state.answered = true;
   const q = state.questions[state.qIndex];
-  state.skillStats[q.skill].t++;
-  const correct = chosen.toLowerCase().trim() === q.ans.toLowerCase().trim();
-  document.querySelectorAll('.opt-btn').forEach(b => {
-    b.disabled = true;
-    if (b.textContent.toLowerCase().trim() === q.ans.toLowerCase().trim()) b.classList.add('correct');
+  const correct = chosen === q.answer;
+  if (correct) state.score++;
+
+  // Style options
+  document.querySelectorAll('.quiz-opt').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === chosen && !correct) btn.classList.add('wrong');
   });
-  if (!correct) {
-    [...document.querySelectorAll('.opt-btn')].find(b => b.textContent.toLowerCase().trim() === chosen.toLowerCase().trim())?.classList.add('wrong');
-  } else {
-    state.score++;
-    state.skillStats[q.skill].c++;
-    spawnStars();
-  }
-  showFeedback(correct, q.ans);
+
+  showQuizFeedback(correct, q.explanation);
+  document.getElementById('quiz-score').textContent = state.score;
 }
 
-function checkPicture(chosen) {
+function handleTF(val) {
   if (state.answered) return;
   state.answered = true;
   const q = state.questions[state.qIndex];
-  state.skillStats[q.skill].t++;
-  const correct = chosen.toLowerCase().trim() === q.ans.toLowerCase().trim();
-  document.querySelectorAll('.pic-opt').forEach(b => {
-    b.disabled = true;
-    if (b.dataset.val.toLowerCase().trim() === q.ans.toLowerCase().trim()) b.classList.add('correct');
+  const correct = val === q.answer;
+  if (correct) state.score++;
+
+  document.querySelectorAll('.quiz-tf-btn').forEach(btn => {
+    btn.disabled = true;
+    const isTrue = btn.textContent.includes('Verdadero');
+    if (isTrue === q.answer) btn.classList.add('correct');
+    else if (isTrue === val && !correct) btn.classList.add('wrong');
   });
-  if (!correct) {
-    [...document.querySelectorAll('.pic-opt')].find(b => b.dataset.val.toLowerCase().trim() === chosen.toLowerCase().trim())?.classList.add('wrong');
-  } else {
-    state.score++;
-    state.skillStats[q.skill].c++;
-    spawnStars();
-  }
-  showFeedback(correct, q.ans);
+
+  showQuizFeedback(correct, q.explanation);
+  document.getElementById('quiz-score').textContent = state.score;
 }
 
-function checkTap(chosen) {
+function handleFill() {
   if (state.answered) return;
-  state.answered = true;
-  const q = state.questions[state.qIndex];
-  state.skillStats[q.skill].t++;
-  const correct = chosen.toLowerCase().trim() === q.ans.toLowerCase().trim();
-  document.querySelectorAll('.tap-card').forEach(b => {
-    b.disabled = true;
-    if (b.dataset.val.toLowerCase().trim() === q.ans.toLowerCase().trim()) b.classList.add('correct');
-  });
-  if (!correct) {
-    [...document.querySelectorAll('.tap-card')].find(b => b.dataset.val.toLowerCase().trim() === chosen.toLowerCase().trim())?.classList.add('wrong');
-  } else {
-    state.score++;
-    state.skillStats[q.skill].c++;
-    spawnStars(8);
-  }
-  showFeedback(correct, q.ans);
-}
-
-function checkFill() {
-  const inp = document.getElementById('fill-input');
-  if (!inp || state.answered) return;
-  const val = inp.value.trim();
+  const inp = document.getElementById('quiz-fill');
+  if (!inp) return;
+  const val = inp.value.trim().toLowerCase();
   if (!val) return;
+
   state.answered = true;
   const q = state.questions[state.qIndex];
-  state.skillStats[q.skill].t++;
-  const correct = val.toLowerCase() === q.ans.toLowerCase();
+  const correct = val === q.answer.toLowerCase() || val.includes(q.answer.toLowerCase());
+  if (correct) state.score++;
+
   inp.disabled = true;
-  inp.style.borderColor = correct ? '#43A047' : '#E53935';
-  inp.style.background = correct ? '#C8E6C9' : '#FFCDD2';
-  if (correct) { state.score++; state.skillStats[q.skill].c++; spawnStars(); }
-  showFeedback(correct, q.ans);
+  inp.classList.add(correct ? 'correct' : 'wrong');
+  document.querySelector('.quiz-check-btn').disabled = true;
+
+  showQuizFeedback(correct, q.explanation);
+  document.getElementById('quiz-score').textContent = state.score;
 }
 
-function showFeedback(correct, ans) {
+function showQuizFeedback(correct, explanation) {
   const fb = document.getElementById('quiz-feedback');
-  if (correct) {
-    fb.className = 'feedback-bar show ok';
-    const msgs = ['✅ Amazing! 🌟', '✅ Fantastic! 🎉', '✅ Perfect! ⭐', '✅ Great job! 🏆'];
-    fb.innerHTML = msgs[Math.floor(Math.random()*msgs.length)];
-  } else {
-    fb.className = 'feedback-bar show bad';
-    fb.innerHTML = `❌ Not quite! The answer is: <strong>${ans}</strong>`;
-  }
-  document.getElementById('quiz-next').className = 'next-btn show';
+  fb.className = 'feedback-bar show ' + (correct ? 'ok' : 'fail');
+  fb.innerHTML = (correct ? '✅ ' : '❌ ') + explanation;
+  document.getElementById('quiz-next').style.display = 'block';
 }
 
 function nextQuestion() {
@@ -341,190 +304,146 @@ function nextQuestion() {
 
 function finishQuiz() {
   const total = state.questions.length;
-  const pct = Math.round(state.score / total * 100);
-  const st = state.student;
-  const subj = state.subject;
-  const topic = state.topic;
+  const correct = state.score;
+  const pct = Math.round(correct / total * 100);
 
-  // Save best
-  setTopicBest(st.id, subj.id, topic.id, pct);
+  // Save to history
+  const session = {
+    studentId: state.student.id,
+    studentName: state.student.name,
+    subjectId: state.subject.id,
+    subjectLabel: state.subject.label,
+    unitId: state.unit.id,
+    unitTitle: state.unit.title,
+    correct,
+    total,
+    pct,
+    date: new Date().toISOString()
+  };
+  addSession(session);
 
-  // Record session
-  const now = new Date();
-  recordSession({
-    date: now.toLocaleDateString('es-CR') + ' ' + now.toLocaleTimeString('es-CR',{hour:'2-digit',minute:'2-digit'}),
-    studentId: st.id, studentName: st.name,
-    subjectId: subj.id, subjectName: subj.name,
-    topicId: topic.id, topicName: topic.title,
-    score: state.score, total, pct,
-    listening: {...state.skillStats.listening},
-    speaking: {...state.skillStats.speaking},
-    selection: {...state.skillStats.selection},
-  });
-
-  // Render results
-  const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '😊' : '💪';
-  const msg = pct >= 80 ? '¡Excelente! You are a superstar! 🌟'
-             : pct >= 60 ? 'Good job! Keep practicing! 📚'
-             : 'Keep trying! You can do it! 💪';
+  // Results screen
+  const emoji = pct >= 90 ? '🏆' : pct >= 70 ? '🎉' : pct >= 50 ? '😊' : '💪';
+  const msg = pct >= 90 ? '¡Excelente! ¡Estás listo para el examen!'
+    : pct >= 70 ? '¡Muy bien! Sigue practicando para perfeccionar.'
+    : pct >= 50 ? 'Buen intento. Repasa los temas y vuelve a intentarlo.'
+    : '¡No te rindas! Estudia las notas y vuelve a intentarlo.';
 
   document.getElementById('res-emoji').textContent = emoji;
-  document.getElementById('res-score').textContent = `${state.score} / ${total} (${pct}%)`;
+  document.getElementById('res-score').textContent = `${correct} / ${total}`;
   document.getElementById('res-msg').textContent = msg;
+  document.getElementById('sk-listening').textContent = '—';
+  document.getElementById('sk-speaking').textContent = '—';
+  document.getElementById('sk-selection').textContent = `${pct}%`;
 
-  const fmt = sk => {
-    const s = state.skillStats[sk];
-    return s.t > 0 ? `${s.c}/${s.t}` : '—';
-  };
-  document.getElementById('sk-listening').textContent = fmt('listening');
-  document.getElementById('sk-speaking').textContent = fmt('speaking');
-  document.getElementById('sk-selection').textContent = fmt('selection');
-
-  if (pct >= 70) spawnStars(14);
-  showScreen('screen-results');
+  document.getElementById('quiz-progress').style.width = '100%';
+  showScreen('results');
 }
 
-function retryQuiz() { startQuiz(); }
-function goToTopics() {
-  renderTopicList();
-  showScreen('screen-topics');
+function retryQuiz() {
+  startQuiz();
 }
 
-// ============================================================
-//  TRACKER
-// ============================================================
+// ── TRACKER ──────────────────────────────────────────────────
+let trackerFilter = 'all';
+
 function showTracker() {
-  state.trackerFilter = 'all';
   renderTracker();
-  showScreen('screen-tracker');
+  showScreen('tracker');
 }
 
 function renderTracker() {
-  const sessions = getSessions();
-  const filter = state.trackerFilter;
-  const filtered = filter === 'all' ? sessions : sessions.filter(s => s.studentId === filter);
+  const history = loadHistory();
+  const filtered = trackerFilter === 'all'
+    ? history
+    : history.filter(s => s.studentId === trackerFilter);
 
   // Summary
-  document.getElementById('t-sessions').textContent = filtered.length;
-  const scores = filtered.map(s => s.pct);
-  document.getElementById('t-best').textContent = scores.length ? Math.max(...scores) + '%' : '—';
-  document.getElementById('t-avg').textContent = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) + '%' : '—';
+  const sessions = filtered.length;
+  const best = sessions ? Math.max(...filtered.map(s => s.pct)) + '%' : '—';
+  const avg = sessions ? Math.round(filtered.reduce((a, s) => a + s.pct, 0) / sessions) + '%' : '—';
 
-  // Weak skill
-  const wc = {listening:0, speaking:0, selection:0};
+  // Weak topics
+  const unitMap = {};
   filtered.forEach(s => {
-    ['listening','speaking','selection'].forEach(sk => {
-      if (s[sk] && s[sk].t > 0 && s[sk].c/s[sk].t < 0.6) wc[sk]++;
-    });
+    const key = s.unitId;
+    if (!unitMap[key]) unitMap[key] = { title: s.unitTitle, total: 0, pct: 0 };
+    unitMap[key].total++;
+    unitMap[key].pct += s.pct;
   });
-  const topWeak = Object.entries(wc).sort((a,b)=>b[1]-a[1]).filter(e=>e[1]>0).map(e=>e[0]);
-  document.getElementById('t-weak').textContent = topWeak.length ? topWeak.slice(0,2).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(', ') : 'None 🎉';
+  const weakUnit = Object.values(unitMap)
+    .map(u => ({ ...u, avg: Math.round(u.pct / u.total) }))
+    .filter(u => u.avg < 70)
+    .sort((a, b) => a.avg - b.avg)[0];
+
+  document.getElementById('t-sessions').textContent = sessions;
+  document.getElementById('t-best').textContent = best;
+  document.getElementById('t-avg').textContent = avg;
+  document.getElementById('t-weak').textContent = weakUnit ? weakUnit.title : '—';
 
   // Filter buttons
-  document.getElementById('tracker-filters').innerHTML = [
-    {id:'all', label:'👨‍👩‍👦 All'},
-    ...STUDENTS.map(s => ({id:s.id, label: s.avatar+' '+s.name}))
-  ].map(f => `<button class="filter-btn ${filter===f.id?'active':''}" onclick="setFilter('${f.id}')">${f.label}</button>`).join('');
+  const filterWrap = document.getElementById('tracker-filters');
+  filterWrap.innerHTML = `
+    <button class="filter-btn ${trackerFilter === 'all' ? 'active' : ''}" onclick="setTrackerFilter('all')">Todos</button>
+    ${STUDENTS.map(st => `
+      <button class="filter-btn ${trackerFilter === st.id ? 'active' : ''}" onclick="setTrackerFilter('${st.id}')">
+        ${st.avatar} ${st.name}
+      </button>
+    `).join('')}
+  `;
 
-  // Per-student performance bars
+  // Performance bars
   const perfWrap = document.getElementById('tracker-performance');
-  const studentPerf = STUDENTS.map(st => {
-    const sts = filtered.filter(s => s.studentId === st.id);
-    if (sts.length === 0) return null;
-    const avg = Math.round(sts.reduce((a,s)=>a+s.pct,0)/sts.length);
-    return { st, avg };
-  }).filter(Boolean);
-
-  perfWrap.innerHTML = studentPerf.length === 0
-    ? `<div class="empty-msg">No sessions yet for this filter.</div>`
-    : studentPerf.map(({st, avg}) => {
-        const color = avg>=70?'#43A047':avg>=50?'#F9A825':'#E53935';
-        return `
-          <div class="perf-bar-row">
-            <span class="pbr-label">${st.avatar} ${st.name}</span>
-            <div class="pbr-wrap"><div class="pbr-fill" style="width:${avg}%;background:${color}"></div></div>
-            <span class="pbr-pct" style="color:${color}">${avg}%</span>
-          </div>`;
-      }).join('');
+  if (Object.keys(unitMap).length === 0) {
+    perfWrap.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px 0;">Sin datos aún.</p>';
+  } else {
+    perfWrap.innerHTML = Object.values(unitMap).map(u => {
+      const avg = Math.round(u.pct / u.total);
+      const color = avg >= 80 ? '#22c55e' : avg >= 50 ? '#eab308' : '#ef4444';
+      return `
+        <div class="perf-row">
+          <span class="perf-label">${u.title}</span>
+          <div class="perf-bg">
+            <div class="perf-fill" style="width:${avg}%;background:${color}"></div>
+          </div>
+          <span class="perf-pct" style="color:${color}">${avg}%</span>
+        </div>
+      `;
+    }).join('');
+  }
 
   // Session table
   const tbody = document.getElementById('tracker-tbody');
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-msg">No sessions yet! Play some quizzes first 🎮</td></tr>`;
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">Sin sesiones.</td></tr>';
     return;
   }
   tbody.innerHTML = filtered.map(s => {
-    const lPct = s.listening?.t > 0 ? Math.round(s.listening.c/s.listening.t*100)+'%' : '—';
-    const spPct = s.speaking?.t > 0 ? Math.round(s.speaking.c/s.speaking.t*100)+'%' : '—';
-    const sePct = s.selection?.t > 0 ? Math.round(s.selection.c/s.selection.t*100)+'%' : '—';
-    const tag = s.pct >= 70 ? `<span class="tag-strong">✅ Strong</span>`
-              : s.pct >= 50 ? `<span class="tag-ok">👍 OK</span>`
-              : `<span class="tag-weak">⚠️ Review</span>`;
-    const st = STUDENTS.find(st => st.id === s.studentId);
-    return `<tr>
-      <td>${s.date}</td>
-      <td>${st?.avatar || ''} ${s.studentName}</td>
-      <td>${s.subjectName}</td>
-      <td><strong>${s.score}/${s.total} (${s.pct}%)</strong></td>
-      <td>${lPct}</td><td>${spPct}</td><td>${sePct}</td>
-      <td>${tag}</td>
-    </tr>`;
+    const d = new Date(s.date);
+    const dateStr = d.toLocaleDateString('es-CR', { month: 'short', day: 'numeric' });
+    const status = s.pct >= 80 ? '✅' : s.pct >= 50 ? '⚠️' : '❌';
+    return `
+      <tr>
+        <td>${dateStr}</td>
+        <td>${s.studentName}</td>
+        <td>${s.unitTitle}</td>
+        <td><strong>${s.correct}/${s.total}</strong></td>
+        <td>—</td>
+        <td>—</td>
+        <td>${s.pct}%</td>
+        <td>${status}</td>
+      </tr>
+    `;
   }).join('');
 }
 
-function setFilter(id) {
-  state.trackerFilter = id;
+function setTrackerFilter(id) {
+  trackerFilter = id;
   renderTracker();
 }
 
-function clearHistory() {
-  if (!confirm('¿Borrar todo el progreso? This cannot be undone.')) return;
-  localStorage.removeItem('school_progress');
-  localStorage.removeItem('school_sessions');
-  renderTracker();
+// ── INIT ─────────────────────────────────────────────────────
+(function init() {
   renderHome();
-}
-
-// ============================================================
-//  NAV HELPERS
-// ============================================================
-function goHome() {
-  renderHome();
-  showScreen('screen-home');
-}
-function goSubjects() {
-  renderSubjects();
-  showScreen('screen-subjects');
-}
-
-// ============================================================
-//  UTILITIES
-// ============================================================
-function shuffle(arr) {
-  let a = [...arr];
-  for (let i = a.length-1; i>0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
-}
-
-function escapeSingle(s) {
-  return String(s).replace(/'/g, "\\'").replace(/"/g, '&quot;');
-}
-
-function spawnStars(count=5) {
-  const burst = document.createElement('div');
-  burst.className = 'star-burst';
-  burst.style.cssText = `left:${Math.random()*70+10}%;top:${Math.random()*50+15}%;`;
-  const emojis = ['⭐','🌟','✨','🎉','🏆'];
-  for (let i=0; i<count; i++) {
-    const s = document.createElement('span');
-    s.className = 'star';
-    s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
-    s.style.cssText = `left:${Math.random()*80-40}px;top:0;animation-delay:${i*0.08}s;`;
-    burst.appendChild(s);
-  }
-  document.body.appendChild(burst);
-  setTimeout(() => burst.remove(), 1600);
-}
+  showScreen('home');
+})();
