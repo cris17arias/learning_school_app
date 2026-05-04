@@ -1,409 +1,207 @@
 // ============================================================
 //  content-fabian-ciencias.js
-//  Ciencias 3° – Práctica de Fabián
+//  Ciencias 3.° — Fabián
 //  Escuela Ramón Barrantes Herrera · Sección 3-1
+//  I Prueba, I Semestre 2026
+//  Temas: Sistema Óseo, Muscular, Digestivo, Nutrición
 // ============================================================
 
-const CIENCIAS_CONTENT = {
-
-  // ----------------------------------------------------------
-  //  SISTEMA ÓSEO
-  // ----------------------------------------------------------
-  ciencias_oseo: {
-    title: 'Sistema Óseo',
-    emoji: '🦴',
-    studyNotes: `
-      <h3>🦴 El Sistema Óseo</h3>
-      <p>El cuerpo humano tiene <strong>206 huesos</strong> que se clasifican según su forma:</p>
-      <ul>
-        <li><strong>Largos:</strong> Fémur, húmero, tibia, peroné, cúbito, radio</li>
-        <li><strong>Cortos:</strong> Falanges, tarsos</li>
-        <li><strong>Planos:</strong> Omoplato (escápula), pelvis</li>
-        <li><strong>Curvos:</strong> Costillas, cráneo</li>
-      </ul>
-      <h3>🔗 Articulaciones</h3>
-      <ul>
-        <li><strong>Fijas:</strong> No permiten movimiento (cráneo)</li>
-        <li><strong>Semimóviles:</strong> Movimiento limitado (pelvis)</li>
-        <li><strong>Móviles:</strong> Gran rango de movimiento (hombro, codo, muñeca)</li>
-      </ul>
-      <h3>⚠️ Enfermedades y Lesiones</h3>
-      <ul>
-        <li><strong>Osteoporosis:</strong> Debilitamiento por falta de calcio</li>
-        <li><strong>Fractura:</strong> Ruptura del hueso</li>
-        <li><strong>Luxación:</strong> Articulación fuera de lugar + ligamentos rotos</li>
-        <li><strong>Artritis:</strong> Inflamación de articulaciones</li>
-      </ul>
-      <h3>✅ Cuidados</h3>
-      <ul>
-        <li>Tomar al menos 15 minutos de sol diarios (vitamina D)</li>
-        <li>Consumir alimentos ricos en calcio</li>
-        <li>Hacer ejercicio regularmente</li>
-      </ul>
-    `,
-    questions: [
-      {
-        id: 'oseo_1', type: 'mc',
-        text: '¿Cuántos huesos tiene el cuerpo humano?',
-        options: ['150 huesos', '206 huesos', '300 huesos', '186 huesos'],
-        answer: 1,
-        explanation: 'El cuerpo humano tiene 206 huesos que se clasifican según su forma y tamaño.'
-      },
-      {
-        id: 'oseo_2', type: 'mc',
-        text: '¿Cuál es un ejemplo de hueso largo?',
-        options: ['Cráneo', 'Costillas', 'Fémur', 'Falanges'],
-        answer: 2,
-        explanation: 'El fémur es un hueso largo. También son largos: húmero, tibia, peroné, cúbito y radio.'
-      },
-      {
-        id: 'oseo_3', type: 'mc',
-        text: '¿Qué tipo de articulación es el cráneo?',
-        options: ['Articulación móvil', 'Articulación semimóvil', 'Articulación fija', 'Articulación libre'],
-        answer: 2,
-        explanation: 'Las articulaciones fijas no permiten movimiento, como las del cráneo.'
-      },
-      {
-        id: 'oseo_4', type: 'tf',
-        text: 'Las costillas son un ejemplo de hueso curvo.',
-        answer: true,
-        explanation: '¡Verdad! Los huesos curvos incluyen las costillas y los huesos del cráneo.'
-      },
-      {
-        id: 'oseo_5', type: 'mc',
-        text: '¿Qué enfermedad es el debilitamiento de los huesos por falta de calcio?',
-        options: ['Artritis', 'Fractura', 'Osteoporosis', 'Luxación'],
-        answer: 2,
-        explanation: 'La osteoporosis es el debilitamiento de los huesos por falta de calcio.'
-      },
-      {
-        id: 'oseo_6', type: 'mc',
-        text: '¿Cuál es una medida para cuidar los huesos?',
-        options: ['Tomar al menos 15 minutos de sol al día', 'Comer mucha azúcar', 'Dormir todo el día', 'Evitar el ejercicio'],
-        answer: 0,
-        explanation: 'Tomar al menos 15 minutos de sol diarios ayuda al cuerpo a producir vitamina D, esencial para los huesos.'
-      },
-      {
-        id: 'oseo_7', type: 'mc',
-        text: '¿Qué es una luxación?',
-        options: ['El hueso se rompe', 'La articulación se sale de su lugar y ligamentos se rompen', 'Inflamación de articulaciones', 'Debilitamiento óseo'],
-        answer: 1,
-        explanation: 'La luxación ocurre cuando la articulación se sale de su lugar y además ligamentos y tendones se rompen.'
-      },
-      {
-        id: 'oseo_8', type: 'tf',
-        text: 'Las falanges son huesos cortos.',
-        answer: true,
-        explanation: '¡Correcto! Las falanges y los tarsos son ejemplos de huesos cortos.'
-      },
-      {
-        id: 'oseo_9', type: 'fill',
-        text: 'El omoplato es un ejemplo de hueso ______.',
-        answer: 'plano',
-        explanation: 'El omoplato (escápula) es un hueso plano. También lo son los que forman la pelvis.'
-      },
-      {
-        id: 'oseo_10', type: 'mc',
-        text: '¿Cuál es una articulación móvil?',
-        options: ['Cráneo', 'Pelvis', 'Hombro', 'Columna'],
-        answer: 2,
-        explanation: 'El hombro, el codo y la muñeca son articulaciones móviles — permiten gran rango de movimiento.'
-      }
-    ]
-  },
-
-  // ----------------------------------------------------------
-  //  SISTEMA MUSCULAR
-  // ----------------------------------------------------------
-  ciencias_muscular: {
-    title: 'Sistema Muscular',
-    emoji: '💪',
-    studyNotes: `
-      <h3>💪 El Sistema Muscular</h3>
-      <p>El cuerpo humano tiene <strong>más de 600 músculos</strong>.</p>
-      <h3>Tipos de movimiento</h3>
-      <ul>
-        <li><strong>Voluntario:</strong> Lo decidimos conscientemente (mover la mano)</li>
-        <li><strong>Involuntario:</strong> Funcionan solos (corazón, estómago, intestinos)</li>
-      </ul>
-      <h3>Músculos por zona</h3>
-      <ul>
-        <li><strong>Cara:</strong> Más de 30 músculos</li>
-        <li><strong>Superiores:</strong> Pectorales, bíceps, abdominales</li>
-        <li><strong>Inferiores:</strong> Femoral, glúteos</li>
-      </ul>
-      <h3>⚠️ Lesiones Musculares</h3>
-      <ul>
-        <li><strong>Esguince:</strong> Articulación se tuerce sin dislocarse, puede romper el músculo</li>
-        <li><strong>Desgarro:</strong> Pequeña ruptura muscular con hemorragia</li>
-        <li><strong>Atrofia:</strong> Pérdida de masa muscular por falta de ejercicio</li>
-      </ul>
-      <h3>✅ Cuidados</h3>
-      <ul>
-        <li>Calentar antes de hacer ejercicio</li>
-        <li>Hidratarse correctamente</li>
-        <li>Hacer ejercicio regularmente</li>
-      </ul>
-    `,
-    questions: [
-      {
-        id: 'musc_1', type: 'mc',
-        text: '¿Cuántos músculos hay en el cuerpo humano?',
-        options: ['Más de 300', 'Más de 600', 'Exactamente 206', 'Más de 1000'],
-        answer: 1,
-        explanation: 'En el cuerpo humano hay más de 600 músculos.'
-      },
-      {
-        id: 'musc_2', type: 'tf',
-        text: 'El corazón es un músculo involuntario.',
-        answer: true,
-        explanation: '¡Correcto! El corazón, el estómago y los intestinos son músculos involuntarios — funcionan sin que lo decidamos.'
-      },
-      {
-        id: 'musc_3', type: 'mc',
-        text: '¿Qué es un esguince?',
-        options: ['Ruptura total del músculo', 'La articulación se tuerce sin dislocarse, puede romper el músculo', 'Pérdida de masa muscular', 'Inflamación de los huesos'],
-        answer: 1,
-        explanation: 'El esguince ocurre cuando una articulación se tuerce o dobla sin dislocarse, pudiendo resultar en ruptura del músculo.'
-      },
-      {
-        id: 'musc_4', type: 'mc',
-        text: '¿Cuál es la función principal del sistema muscular?',
-        options: ['Proteger los órganos internos', 'Permitir el movimiento y mantener la postura', 'Producir sangre', 'Filtrar toxinas'],
-        answer: 1,
-        explanation: 'Los músculos permiten el movimiento, mantienen la postura y trabajan junto con los huesos.'
-      },
-      {
-        id: 'musc_5', type: 'mc',
-        text: '¿Qué es la atrofia muscular?',
-        options: ['Ruptura de un músculo con hemorragia', 'Inflamación de un músculo', 'Desgaste o pérdida de masa muscular por falta de ejercicio', 'Luxación de una articulación'],
-        answer: 2,
-        explanation: 'La atrofia muscular es el desgaste o pérdida de masa muscular, a menudo por falta de ejercicio, enfermedades o nutrición deficiente.'
-      },
-      {
-        id: 'musc_6', type: 'fill',
-        text: 'Para proteger los músculos, debemos _______ antes de hacer ejercicio.',
-        answer: 'calentar',
-        explanation: 'Calentar antes de cualquier actividad deportiva previene lesiones musculares.'
-      },
-      {
-        id: 'musc_7', type: 'mc',
-        text: '¿Cuál es un ejemplo de movimiento voluntario?',
-        options: ['El corazón late', 'El estómago digiere', 'Mover la mano', 'Parpadear mientras duermes'],
-        answer: 2,
-        explanation: 'Mover la mano es voluntario porque lo decidimos conscientemente. Los movimientos del corazón son involuntarios.'
-      },
-      {
-        id: 'musc_8', type: 'tf',
-        text: 'El desgarro implica una pequeña ruptura muscular acompañada de hemorragia.',
-        answer: true,
-        explanation: '¡Correcto! El desgarro implica una pequeña ruptura muscular con hemorragia y puede ser causado por golpes o falta de calentamiento.'
-      },
-      {
-        id: 'musc_9', type: 'mc',
-        text: '¿Qué músculos están en las extremidades superiores?',
-        options: ['Femoral y glúteos', 'Pectorales, bíceps y abdominales', 'Solo el bíceps', 'Trapecio y dorsal'],
-        answer: 1,
-        explanation: 'Los pectorales, bíceps y abdominales se encuentran en la parte superior del cuerpo.'
-      },
-      {
-        id: 'musc_10', type: 'mc',
-        text: '¿En la cara cuántos músculos aproximadamente tenemos?',
-        options: ['Más de 10', 'Más de 30', 'Exactamente 20', 'Más de 100'],
-        answer: 1,
-        explanation: 'En la cara tenemos más de 30 músculos que nos ayudan a sonreír, hablar y hacer gestos.'
-      }
-    ]
-  },
-
-  // ----------------------------------------------------------
-  //  SISTEMA DIGESTIVO
-  // ----------------------------------------------------------
-  ciencias_digestivo: {
-    title: 'Sistema Digestivo',
-    emoji: '🫁',
-    studyNotes: `
-      <h3>🫁 El Sistema Digestivo</h3>
-      <p>Convierte los alimentos en nutrientes que el cuerpo puede usar.</p>
-      <h3>Órganos y funciones</h3>
-      <ul>
-        <li><strong>Boca:</strong> Tritura con los dientes y humedece con saliva</li>
-        <li><strong>Glándulas salivales:</strong> Producen saliva para humedecer y comenzar la digestión</li>
-        <li><strong>Esófago:</strong> Tubo que lleva la comida al estómago</li>
-        <li><strong>Estómago:</strong> Mezcla la comida con jugos digestivos y la convierte en masa</li>
-        <li><strong>Intestino delgado:</strong> Absorbe los nutrientes hacia la sangre</li>
-        <li><strong>Intestino grueso:</strong> Absorbe el agua, forma las heces</li>
-        <li><strong>Hígado:</strong> Produce bilis para digerir las grasas</li>
-      </ul>
-      <h3>⚠️ Enfermedades Digestivas</h3>
-      <ul>
-        <li><strong>Cólera:</strong> Bacteria en agua y alimentos contaminados; diarrea y fiebre</li>
-        <li><strong>Gastritis:</strong> Inflamación del estómago; puede causar úlceras</li>
-        <li><strong>Estreñimiento:</strong> Dificultad para ir al baño (menos de 3 veces/semana)</li>
-        <li><strong>Caries:</strong> Bacterias dañan los dientes</li>
-      </ul>
-      <h3>✅ Cuidados</h3>
-      <ul>
-        <li>Cepillarse los dientes y la lengua regularmente</li>
-        <li>Tomar suficiente agua y fibra</li>
-        <li>Consumir agua y alimentos limpios</li>
-      </ul>
-    `,
-    questions: [
-      {
-        id: 'dig_1', type: 'mc',
-        text: '¿Cuál es la función de la boca en la digestión?',
-        options: ['Absorber nutrientes', 'Triturar los alimentos con los dientes y humedecerlos con saliva', 'Mezclar con jugos gástricos', 'Llevar la comida al estómago'],
-        answer: 1,
-        explanation: 'En la boca, los dientes trituran los alimentos y la saliva los humedece para facilitar el tragado.'
-      },
-      {
-        id: 'dig_2', type: 'mc',
-        text: '¿Qué hace el esófago?',
-        options: ['Produce jugos digestivos', 'Es donde se absorben los nutrientes', 'Es el tubo que lleva la comida al estómago', 'Almacena la comida'],
-        answer: 2,
-        explanation: 'El esófago es el tubo que transporta la comida desde la boca hasta el estómago.'
-      },
-      {
-        id: 'dig_3', type: 'fill',
-        text: 'El _______ mezcla la comida con los jugos digestivos y la convierte en una masa.',
-        answer: 'estómago',
-        explanation: 'El estómago mezcla la comida con los jugos digestivos y la convierte en una masa lista para continuar la digestión.'
-      },
-      {
-        id: 'dig_4', type: 'mc',
-        text: '¿Qué enfermedad digestiva es causada por una bacteria en agua y alimentos contaminados?',
-        options: ['Gastritis', 'Caries', 'Cólera', 'Estreñimiento'],
-        answer: 2,
-        explanation: 'El cólera es causado por una bacteria en agua y alimentos contaminados. Provoca diarrea intensa y fiebre.'
-      },
-      {
-        id: 'dig_5', type: 'tf',
-        text: 'El estreñimiento es cuando es difícil ir al baño menos de tres veces a la semana.',
-        answer: true,
-        explanation: '¡Correcto! El estreñimiento causa dolor y heces duras y secas. Tomar agua y fibra ayuda a prevenirlo.'
-      },
-      {
-        id: 'dig_6', type: 'mc',
-        text: '¿Cuál es la función de las glándulas salivales?',
-        options: ['Absorber nutrientes', 'Producir saliva para humedecer y comenzar la digestión', 'Producir jugos gástricos', 'Transportar alimentos'],
-        answer: 1,
-        explanation: 'Las glándulas salivales producen saliva que humedece los alimentos y comienza la digestión en la boca.'
-      },
-      {
-        id: 'dig_7', type: 'mc',
-        text: '¿Para qué sirve el hígado en la digestión?',
-        options: ['Lleva comida al estómago', 'Almacena las heces', 'Produce bilis que ayuda a digerir las grasas', 'Absorbe el agua'],
-        answer: 2,
-        explanation: 'El hígado produce bilis, que se almacena en la vesícula biliar y ayuda a digerir las grasas.'
-      },
-      {
-        id: 'dig_8', type: 'tf',
-        text: 'La gastritis puede causar úlceras si no se trata.',
-        answer: true,
-        explanation: '¡Correcto! La gastritis es la inflamación del estómago y puede provocar úlceras si no recibe tratamiento.'
-      },
-      {
-        id: 'dig_9', type: 'mc',
-        text: '¿Dónde se absorben los nutrientes principalmente?',
-        options: ['Estómago', 'Intestino grueso', 'Intestino delgado', 'Boca'],
-        answer: 2,
-        explanation: 'El intestino delgado es donde se absorbe la mayor parte de los nutrientes hacia la sangre.'
-      },
-      {
-        id: 'dig_10', type: 'mc',
-        text: '¿Cómo se previenen las caries?',
-        options: ['Tomando mucha agua', 'Cepillándonos los dientes y la lengua regularmente y comiendo menos dulces', 'Comiendo fruta', 'Haciendo ejercicio'],
-        answer: 1,
-        explanation: 'Las caries ocurren cuando las bacterias dañan los dientes. El cepillado regular y comer menos dulces las previene.'
-      }
-    ]
-  },
-
-  // ----------------------------------------------------------
-  //  NUTRICIÓN
-  // ----------------------------------------------------------
-  ciencias_nutricion: {
-    title: 'Nutrición',
-    emoji: '🥦',
-    studyNotes: `
-      <h3>🥦 Nutrición</h3>
-      <p>Los nutrientes son sustancias que el cuerpo necesita para funcionar bien.</p>
-      <h3>Tipos de Nutrientes</h3>
-      <ul>
-        <li><strong>Carbohidratos:</strong> Principal fuente de energía. Fuentes: miel, frutas, papas, yuca, pan.</li>
-        <li><strong>Proteínas:</strong> Crecimiento y protección del cuerpo. Fuentes: leche, vegetales, frijoles, lentejas.</li>
-        <li><strong>Lípidos (grasas):</strong> Almacenan energía cuando faltan carbohidratos. Fuentes: mayonesa, aguacate.</li>
-        <li><strong>Vitaminas:</strong> Crecimiento y formación de tejidos. Fuentes: frutas, verduras, carnes.</li>
-        <li><strong>Minerales:</strong> Desarrollo del sistema óseo y nervioso. Fuentes: legumbres, leche, frutos secos.</li>
-      </ul>
-    `,
-    questions: [
-      {
-        id: 'nut_1', type: 'mc',
-        text: '¿Cuál es la función principal de los carbohidratos?',
-        options: ['Construir músculos', 'Ser fuente de energía', 'Proteger los huesos', 'Regular la temperatura'],
-        answer: 1,
-        explanation: 'Los carbohidratos son la principal fuente de energía del cuerpo. Se encuentran en miel, frutas, papas, yuca y pan.'
-      },
-      {
-        id: 'nut_2', type: 'mc',
-        text: '¿Qué alimentos son ricos en proteínas?',
-        options: ['Miel, frutas y pan', 'Mayonesa y aguacate', 'Leche, vegetales, frijoles y lentejas', 'Solo la carne roja'],
-        answer: 2,
-        explanation: 'Las proteínas se encuentran en leche, vegetales, frijoles y lentejas. Ayudan al crecimiento y protección del cuerpo.'
-      },
-      {
-        id: 'nut_3', type: 'tf',
-        text: 'Los lípidos almacenan energía cuando faltan carbohidratos.',
-        answer: true,
-        explanation: '¡Correcto! Los lípidos almacenan energía y el cuerpo los usa cuando no hay suficientes carbohidratos. Mayonesa y aguacate son fuentes de lípidos.'
-      },
-      {
-        id: 'nut_4', type: 'mc',
-        text: '¿Para qué sirven los minerales en el cuerpo?',
-        options: ['Son fuente de energía inmediata', 'Ayudan al desarrollo del sistema óseo y nervioso', 'Forman los músculos', 'Solo hidratan el cuerpo'],
-        answer: 1,
-        explanation: 'Los minerales ayudan al desarrollo del sistema óseo y nervioso. Se encuentran en legumbres, leche y frutos secos.'
-      },
-      {
-        id: 'nut_5', type: 'mc',
-        text: '¿Qué nutriente es esencial para el crecimiento y formación de tejidos?',
-        options: ['Carbohidratos', 'Lípidos', 'Vitaminas', 'Minerales'],
-        answer: 2,
-        explanation: 'Las vitaminas son esenciales para el crecimiento y formación de tejidos. Destacan en frutas, verduras y carnes.'
-      },
-      {
-        id: 'nut_6', type: 'fill',
-        text: 'La miel, las frutas, las papas, la yuca y el pan son fuentes de _______.',
-        answer: 'carbohidratos',
-        explanation: 'Estos alimentos son ricos en carbohidratos, la principal fuente de energía del cuerpo.'
-      },
-      {
-        id: 'nut_7', type: 'tf',
-        text: 'Las proteínas ayudan al crecimiento y protección del cuerpo.',
-        answer: true,
-        explanation: '¡Correcto! Las proteínas son fundamentales para el crecimiento y la protección del cuerpo.'
-      },
-      {
-        id: 'nut_8', type: 'mc',
-        text: '¿En qué alimentos se encuentran principalmente las vitaminas?',
-        options: ['Pan, yuca y papas', 'Frutas, verduras y carnes', 'Mayonesa y aguacate', 'Leche y frutos secos'],
-        answer: 1,
-        explanation: 'Las vitaminas se encuentran principalmente en frutas, verduras y carnes.'
-      }
-    ]
-  }
-};
-
-// Register content into SUBJECTS
-(function() {
-  const ciencias = SUBJECTS.ciencias;
-  ciencias.units.forEach(unit => {
-    const content = CIENCIAS_CONTENT[unit.contentKey];
-    if (content) {
-      unit.studyNotes = content.studyNotes;
-      unit.questions = content.questions;
+(function () {
+  function register() {
+    if (typeof CONTENT === 'undefined') {
+      setTimeout(register, 50);
+      return;
     }
-  });
+
+    CONTENT.fabian.ciencias = {
+      units: [
+        {
+          id: 'ciencias-u1',
+          title: 'I Prueba — Ciencias 3.° año',
+          theme: 'Sistemas del Cuerpo Humano y Nutrición',
+          essentialQuestion: '¿Cómo funciona y cómo cuido mi cuerpo?',
+          status: 'active',
+          topics: [
+
+            // ──────────────────────────────────────────────
+            // 1. SISTEMA ÓSEO
+            // ──────────────────────────────────────────────
+            {
+              id: 'oseo',
+              title: 'Sistema Óseo',
+              icon: '🦴',
+              content: `
+                <h3>El Sistema Óseo 🦴</h3>
+                <div class="rule-box" style="background:#E3F2FD;border-left:4px solid #1565C0">
+                  <p>El cuerpo humano tiene <strong>206 huesos</strong> clasificados según su forma:</p>
+                </div>
+                <div class="vocab-grid">
+                  <div class="vocab-item">📏 <strong>Largos:</strong> Fémur, húmero, tibia, peroné, cúbito, radio</div>
+                  <div class="vocab-item">🔲 <strong>Cortos:</strong> Falanges, tarsos</div>
+                  <div class="vocab-item">🪟 <strong>Planos:</strong> Omoplato (escápula), pelvis</div>
+                  <div class="vocab-item">🌙 <strong>Curvos:</strong> Costillas, cráneo</div>
+                </div>
+                <h3 style="margin-top:14px">Articulaciones</h3>
+                <div class="vocab-grid">
+                  <div class="vocab-item">🔒 <strong>Fijas:</strong> No permiten movimiento (cráneo)</div>
+                  <div class="vocab-item">↔️ <strong>Semimóviles:</strong> Movimiento limitado (columna)</div>
+                  <div class="vocab-item">🔄 <strong>Móviles:</strong> Gran rango de movimiento (hombro, codo, muñeca)</div>
+                </div>
+                <h3 style="margin-top:14px">⚠️ Enfermedades y Lesiones</h3>
+                <div class="vocab-grid">
+                  <div class="vocab-item">🦴 <strong>Osteoporosis:</strong> Debilitamiento por falta de calcio</div>
+                  <div class="vocab-item">💥 <strong>Fractura:</strong> Ruptura del hueso</div>
+                  <div class="vocab-item">🔀 <strong>Luxación:</strong> Articulación fuera de lugar + ligamentos rotos</div>
+                  <div class="vocab-item">🔥 <strong>Artritis:</strong> Inflamación de articulaciones</div>
+                </div>
+                <div class="rule-box" style="background:#E8F5E9;border-left:4px solid #2E7D32;margin-top:12px">
+                  <p><strong>✅ Cuidados:</strong> Tomar 15 min de sol diarios (vitamina D) · Consumir calcio · Hacer ejercicio</p>
+                </div>
+              `,
+              questions: [
+                { type:'selection', skill:'selection', q:'¿Cuántos huesos tiene el cuerpo humano?', opts:['150 huesos','206 huesos','300 huesos','186 huesos'], ans:'206 huesos' },
+                { type:'selection', skill:'selection', q:'¿Cuál es un ejemplo de hueso LARGO?', opts:['Cráneo','Costillas','Fémur','Falanges'], ans:'Fémur' },
+                { type:'selection', skill:'selection', q:'¿Qué tipo de articulación es el CRÁNEO?', opts:['Móvil','Semimóvil','Fija','Libre'], ans:'Fija' },
+                { type:'selection', skill:'listening', q:'¿Qué enfermedad es el debilitamiento de los huesos por falta de calcio?', opts:['Artritis','Fractura','Osteoporosis','Luxación'], ans:'Osteoporosis' },
+                { type:'selection', skill:'selection', q:'¿Cuál es una medida para cuidar los huesos?', opts:['Tomar 15 min de sol al día','Comer mucha azúcar','Dormir todo el día','Evitar el ejercicio'], ans:'Tomar 15 min de sol al día' },
+                { type:'selection', skill:'selection', q:'¿Qué es una LUXACIÓN?', opts:['El hueso se rompe','La articulación se sale de su lugar y ligamentos se rompen','Inflamación de articulaciones','Debilitamiento óseo'], ans:'La articulación se sale de su lugar y ligamentos se rompen' },
+                { type:'fill', skill:'speaking', q:'El omoplato es un ejemplo de hueso ___.', ans:'plano' },
+                { type:'selection', skill:'selection', q:'Las costillas son un ejemplo de hueso...', opts:['largo','corto','plano','curvo'], ans:'curvo' },
+                { type:'selection', skill:'selection', q:'¿Cuál es una articulación MÓVIL?', opts:['Cráneo','Pelvis','Hombro','Vértebras'], ans:'Hombro' },
+                { type:'fill', skill:'speaking', q:'Las falanges y los tarsos son ejemplos de huesos ___.', ans:'cortos' },
+              ]
+            },
+
+            // ──────────────────────────────────────────────
+            // 2. SISTEMA MUSCULAR
+            // ──────────────────────────────────────────────
+            {
+              id: 'muscular',
+              title: 'Sistema Muscular',
+              icon: '💪',
+              content: `
+                <h3>El Sistema Muscular 💪</h3>
+                <div class="rule-box" style="background:#FCE4EC;border-left:4px solid #C62828">
+                  <p>El cuerpo humano tiene <strong>más de 600 músculos</strong>.</p>
+                </div>
+                <h3 style="margin-top:12px">Tipos de movimiento</h3>
+                <div class="vocab-grid">
+                  <div class="vocab-item">✋ <strong>Voluntario:</strong> Lo decidimos conscientemente (mover la mano)</div>
+                  <div class="vocab-item">❤️ <strong>Involuntario:</strong> Funcionan solos (corazón, estómago, intestinos)</div>
+                </div>
+                <h3 style="margin-top:12px">Músculos por zona</h3>
+                <div class="vocab-grid">
+                  <div class="vocab-item">😊 <strong>Cara:</strong> Más de 30 músculos</div>
+                  <div class="vocab-item">💪 <strong>Parte superior:</strong> Pectorales, bíceps, abdominales</div>
+                  <div class="vocab-item">🦵 <strong>Parte inferior:</strong> Femoral, glúteos</div>
+                </div>
+                <h3 style="margin-top:12px">⚠️ Lesiones Musculares</h3>
+                <div class="vocab-grid">
+                  <div class="vocab-item">🌀 <strong>Esguince:</strong> Articulación se tuerce sin dislocarse</div>
+                  <div class="vocab-item">🩸 <strong>Desgarro:</strong> Pequeña ruptura muscular con hemorragia</div>
+                  <div class="vocab-item">📉 <strong>Atrofia:</strong> Pérdida de masa muscular por falta de ejercicio</div>
+                </div>
+                <div class="rule-box" style="background:#E8F5E9;border-left:4px solid #2E7D32;margin-top:12px">
+                  <p><strong>✅ Cuidados:</strong> Calentar antes del ejercicio · Hidratarse · Ejercicio regular</p>
+                </div>
+              `,
+              questions: [
+                { type:'selection', skill:'selection', q:'¿Cuántos músculos hay en el cuerpo humano?', opts:['Más de 300','Más de 600','Exactamente 206','Más de 1000'], ans:'Más de 600' },
+                { type:'selection', skill:'listening', q:'¿El corazón es un músculo voluntario o involuntario?', opts:['Voluntario','Involuntario','Los dos','Ninguno'], ans:'Involuntario' },
+                { type:'selection', skill:'selection', q:'¿Qué es un ESGUINCE?', opts:['Ruptura total del músculo','La articulación se tuerce sin dislocarse','Pérdida de masa muscular','Inflamación de los huesos'], ans:'La articulación se tuerce sin dislocarse' },
+                { type:'selection', skill:'selection', q:'¿Cuál es la función principal del sistema muscular?', opts:['Proteger los órganos internos','Permitir el movimiento y mantener la postura','Producir sangre','Filtrar toxinas'], ans:'Permitir el movimiento y mantener la postura' },
+                { type:'selection', skill:'selection', q:'¿Qué es la ATROFIA muscular?', opts:['Ruptura con hemorragia','Inflamación muscular','Pérdida de masa muscular por falta de ejercicio','Luxación'], ans:'Pérdida de masa muscular por falta de ejercicio' },
+                { type:'fill', skill:'speaking', q:'Para proteger los músculos, debemos ___ antes de hacer ejercicio.', ans:'calentar' },
+                { type:'selection', skill:'selection', q:'¿Cuál es un ejemplo de movimiento VOLUNTARIO?', opts:['El corazón late','El estómago digiere','Mover la mano','El intestino trabaja'], ans:'Mover la mano' },
+                { type:'selection', skill:'listening', q:'¿El DESGARRO implica una ruptura muscular con hemorragia?', opts:['Sí, es correcto','No, es solo un esguince','No, es atrofia','Solo en atletas'], ans:'Sí, es correcto' },
+                { type:'selection', skill:'selection', q:'¿En la cara cuántos músculos aproximadamente tenemos?', opts:['Más de 10','Más de 30','Exactamente 20','Más de 100'], ans:'Más de 30' },
+                { type:'fill', skill:'speaking', q:'El desgarro implica una pequeña ruptura muscular acompañada de ___.', ans:'hemorragia' },
+              ]
+            },
+
+            // ──────────────────────────────────────────────
+            // 3. SISTEMA DIGESTIVO
+            // ──────────────────────────────────────────────
+            {
+              id: 'digestivo',
+              title: 'Sistema Digestivo',
+              icon: '🫁',
+              content: `
+                <h3>El Sistema Digestivo 🫁</h3>
+                <p style="margin-bottom:12px">Convierte los alimentos en nutrientes que el cuerpo puede usar.</p>
+                <div class="vocab-grid">
+                  <div class="vocab-item">👄 <strong>Boca:</strong> Tritura con los dientes y humedece con saliva</div>
+                  <div class="vocab-item">💧 <strong>Glándulas salivales:</strong> Producen saliva para comenzar la digestión</div>
+                  <div class="vocab-item">〰️ <strong>Esófago:</strong> Tubo que lleva la comida al estómago</div>
+                  <div class="vocab-item">🫙 <strong>Estómago:</strong> Mezcla la comida con jugos digestivos</div>
+                  <div class="vocab-item">🟡 <strong>Intestino delgado:</strong> Absorbe los nutrientes hacia la sangre</div>
+                  <div class="vocab-item">🟤 <strong>Intestino grueso:</strong> Absorbe el agua, forma las heces</div>
+                  <div class="vocab-item">🟠 <strong>Hígado:</strong> Produce bilis para digerir las grasas</div>
+                </div>
+                <h3 style="margin-top:14px">⚠️ Enfermedades Digestivas</h3>
+                <div class="vocab-grid">
+                  <div class="vocab-item">🦠 <strong>Cólera:</strong> Bacteria en agua contaminada; diarrea y fiebre</div>
+                  <div class="vocab-item">🔥 <strong>Gastritis:</strong> Inflamación del estómago; puede causar úlceras</div>
+                  <div class="vocab-item">😣 <strong>Estreñimiento:</strong> Difícil ir al baño menos de 3 veces/semana</div>
+                  <div class="vocab-item">🦷 <strong>Caries:</strong> Bacterias dañan los dientes</div>
+                </div>
+                <div class="rule-box" style="background:#E8F5E9;border-left:4px solid #2E7D32;margin-top:12px">
+                  <p><strong>✅ Cuidados:</strong> Cepillarse dientes regularmente · Tomar agua y fibra · Consumir alimentos limpios</p>
+                </div>
+              `,
+              questions: [
+                { type:'selection', skill:'selection', q:'¿Cuál es la función de la boca en la digestión?', opts:['Absorber nutrientes','Triturar los alimentos y humedecerlos con saliva','Mezclar con jugos gástricos','Llevar la comida al estómago'], ans:'Triturar los alimentos y humedecerlos con saliva' },
+                { type:'selection', skill:'selection', q:'¿Qué hace el ESÓFAGO?', opts:['Produce jugos digestivos','Absorbe los nutrientes','Es el tubo que lleva la comida al estómago','Almacena la comida'], ans:'Es el tubo que lleva la comida al estómago' },
+                { type:'fill', skill:'speaking', q:'El ___ mezcla la comida con los jugos digestivos y la convierte en una masa.', ans:'estómago' },
+                { type:'selection', skill:'selection', q:'¿Qué enfermedad es causada por una bacteria en agua contaminada?', opts:['Gastritis','Caries','Cólera','Estreñimiento'], ans:'Cólera' },
+                { type:'selection', skill:'listening', q:'¿La gastritis puede causar úlceras si no se trata?', opts:['Sí, es correcto','No, nunca','Solo en adultos','Solo si hay cólera'], ans:'Sí, es correcto' },
+                { type:'selection', skill:'selection', q:'¿Para qué sirve el HÍGADO en la digestión?', opts:['Lleva comida al estómago','Almacena las heces','Produce bilis que ayuda a digerir las grasas','Absorbe el agua'], ans:'Produce bilis que ayuda a digerir las grasas' },
+                { type:'selection', skill:'selection', q:'¿Dónde se absorben los nutrientes principalmente?', opts:['Estómago','Intestino grueso','Intestino delgado','Boca'], ans:'Intestino delgado' },
+                { type:'selection', skill:'selection', q:'¿Cómo se previenen las CARIES?', opts:['Tomando mucha agua','Cepillándonos dientes regularmente y comiendo menos dulces','Comiendo fruta','Haciendo ejercicio'], ans:'Cepillándonos dientes regularmente y comiendo menos dulces' },
+                { type:'fill', skill:'speaking', q:'Las glándulas salivales producen ___ para humedecer los alimentos.', ans:'saliva' },
+                { type:'selection', skill:'listening', q:'El estreñimiento ocurre cuando es difícil ir al baño menos de...', opts:['una vez al día','dos veces a la semana','tres veces a la semana','cinco veces a la semana'], ans:'tres veces a la semana' },
+              ]
+            },
+
+            // ──────────────────────────────────────────────
+            // 4. NUTRICIÓN
+            // ──────────────────────────────────────────────
+            {
+              id: 'nutricion',
+              title: 'Nutrición',
+              icon: '🥦',
+              content: `
+                <h3>Nutrición 🥦</h3>
+                <p style="margin-bottom:12px">Los nutrientes son sustancias que el cuerpo necesita para funcionar bien.</p>
+                <div class="vocab-grid">
+                  <div class="vocab-item">⚡ <strong>Carbohidratos:</strong> Principal fuente de energía.<br><em>Miel, frutas, papas, yuca, pan</em></div>
+                  <div class="vocab-item">💪 <strong>Proteínas:</strong> Crecimiento y protección del cuerpo.<br><em>Leche, vegetales, frijoles, lentejas</em></div>
+                  <div class="vocab-item">🥑 <strong>Lípidos (grasas):</strong> Almacenan energía.<br><em>Mayonesa, aguacate</em></div>
+                  <div class="vocab-item">🍊 <strong>Vitaminas:</strong> Crecimiento y formación de tejidos.<br><em>Frutas, verduras, carnes</em></div>
+                  <div class="vocab-item">🥛 <strong>Minerales:</strong> Desarrollo óseo y nervioso.<br><em>Legumbres, leche, frutos secos</em></div>
+                </div>
+              `,
+              questions: [
+                { type:'selection', skill:'selection', q:'¿Cuál es la función principal de los CARBOHIDRATOS?', opts:['Construir músculos','Ser fuente de energía','Proteger los huesos','Regular la temperatura'], ans:'Ser fuente de energía' },
+                { type:'selection', skill:'selection', q:'¿Qué alimentos son ricos en PROTEÍNAS?', opts:['Miel, frutas y pan','Mayonesa y aguacate','Leche, vegetales, frijoles y lentejas','Solo la carne roja'], ans:'Leche, vegetales, frijoles y lentejas' },
+                { type:'selection', skill:'listening', q:'¿Los lípidos almacenan energía cuando faltan carbohidratos?', opts:['Sí, es correcto','No, eso lo hacen las vitaminas','No, son solo para el corazón','No tienen función energética'], ans:'Sí, es correcto' },
+                { type:'selection', skill:'selection', q:'¿Para qué sirven los MINERALES en el cuerpo?', opts:['Son fuente de energía inmediata','Ayudan al desarrollo del sistema óseo y nervioso','Forman los músculos','Solo hidratan el cuerpo'], ans:'Ayudan al desarrollo del sistema óseo y nervioso' },
+                { type:'selection', skill:'selection', q:'¿Qué nutriente es esencial para el crecimiento y formación de tejidos?', opts:['Carbohidratos','Lípidos','Vitaminas','Minerales'], ans:'Vitaminas' },
+                { type:'fill', skill:'speaking', q:'La miel, las frutas, las papas, la yuca y el pan son fuentes de ___.', ans:'carbohidratos' },
+                { type:'selection', skill:'selection', q:'¿Las proteínas ayudan al crecimiento y protección del cuerpo?', opts:['Sí','No','Solo en adultos','Solo los minerales hacen eso'], ans:'Sí' },
+                { type:'selection', skill:'selection', q:'¿En qué alimentos se encuentran principalmente las VITAMINAS?', opts:['Pan, yuca y papas','Frutas, verduras y carnes','Mayonesa y aguacate','Solo en leche'], ans:'Frutas, verduras y carnes' },
+                { type:'fill', skill:'speaking', q:'La mayonesa y el aguacate son fuentes de ___ (grasas).', ans:'lípidos' },
+                { type:'selection', skill:'listening', q:'¿Cuál nutriente se encuentra en legumbres, leche y frutos secos?', opts:['Carbohidratos','Proteínas','Vitaminas','Minerales'], ans:'Minerales' },
+              ]
+            },
+
+          ] // end topics
+        }
+      ] // end units
+    }; // end ciencias
+
+    console.log('✅ Ciencias content para Fabián cargado.');
+  }
+
+  register();
 })();
