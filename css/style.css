@@ -604,3 +604,10 @@ html, body {
   white-space: nowrap;
 }
 .sessions-table tr:hover td { background: #f8faff; }
+
+/* Extra styles for vocab-grid and rule-box used in content */
+.vocab-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0; }
+.vocab-item { background:#f8faff; border-radius:10px; padding:10px 12px; font-size:0.85rem; line-height:1.4; }
+.rule-box { border-radius:10px; padding:12px 16px; margin:8px 0; font-size:0.88rem; line-height:1.6; }
+.rule-box p { margin:4px 0; color:var(--navy); }
+@media(max-width:480px){ .vocab-grid{ grid-template-columns:1fr; } }

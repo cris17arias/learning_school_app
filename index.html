@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>📚 Escuela Ramón Barr — Mis Estudios</title>
+<title>📚 Escuela Ramón Barrantes — Mis Estudios</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -231,10 +231,906 @@
 <!-- ============================================================
      SCRIPTS — order matters!
      ============================================================ -->
-<script src="js/data.js"></script>
-<script src="js/content-kids.js"></script>
-<script src="js/content-fabian-espanol.js"></script>
-<script src="js/content-fabian-ciencias.js"></script>
+
+<script>
+// ============================================================
+//  DATA — Students, Subjects, Content
+//  All field names unified: topics use icon/content/questions
+//  App uses topic.icon, topic.title, topic.content, topic.questions
+//  Questions: { type:'selection'|'fill', skill, q, opts[], ans }
+// ============================================================
+
+const STUDENTS = [
+  { id:'andres',   name:'Andrés',   grade:'1st Grade',  gradeNum:1, avatar:'🦁', color:'#FF8A65' },
+  { id:'fabian',   name:'Fabián',   grade:'3rd Grade',  gradeNum:3, avatar:'🐯', color:'#7C4DFF' },
+  { id:'fernando', name:'Fernando', grade:'Pre-Kinder', gradeNum:0, avatar:'🐸', color:'#26A69A' },
+];
+
+const SUBJECTS_META = [
+  { id:'english',  name:'English',           icon:'🇺🇸', color:'#1565C0', colorLight:'#E3F2FD' },
+  { id:'espanol',  name:'Español',           icon:'📖',  color:'#C62828', colorLight:'#FFEBEE' },
+  { id:'math',     name:'Matemáticas',       icon:'🔢',  color:'#2E7D32', colorLight:'#E8F5E9' },
+  { id:'sociales', name:'Estudios Sociales', icon:'🌎',  color:'#E65100', colorLight:'#FFF3E0' },
+  { id:'ciencias', name:'Ciencias',          icon:'🔬',  color:'#6A1B9A', colorLight:'#F3E5F5' },
+];
+
+// ── CONTENT ─────────────────────────────────────────────────
+// Structure: CONTENT[studentId][subjectId] = { units: [ { id, title, theme, topics: [ { id, title, icon, content, questions } ] } ] }
+// Questions: { type:'selection'|'fill', skill:'selection'|'listening'|'speaking', q, opts[], ans }
+
+const CONTENT = {
+
+  // ══════════════════════════════════════════════════════════
+  //  FABIÁN — 3rd Grade
+  // ══════════════════════════════════════════════════════════
+  fabian: {
+
+    english: { units: [
+      { id:'unit1', title:'Unit 1 — My Family To-Do List', theme:'Family Chores & Home Vocabulary', topics: [
+        { id:'chores-vocab', title:'Household Chores', icon:'🏠',
+          content:`<h3>Household Chores 🏠</h3><p>Learn the words for chores we do at home:</p>
+          <div class="vocab-grid">
+            <div class="vocab-item">🛏️ <strong>Make the bed</strong></div>
+            <div class="vocab-item">🧹 <strong>Sweep</strong> the floor</div>
+            <div class="vocab-item">🪣 <strong>Mop</strong> the floor</div>
+            <div class="vocab-item">🍽️ <strong>Wash</strong> the dishes</div>
+            <div class="vocab-item">👔 <strong>Iron</strong> the clothes</div>
+            <div class="vocab-item">🍳 <strong>Cook</strong> dinner</div>
+            <div class="vocab-item">🧺 <strong>Do the laundry</strong></div>
+            <div class="vocab-item">📦 <strong>Pick up</strong> the toys</div>
+            <div class="vocab-item">🪟 <strong>Clean</strong> the windows</div>
+            <div class="vocab-item">🌫️ <strong>Dust</strong> the furniture</div>
+            <div class="vocab-item">🧹 <strong>Tidy up</strong></div>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'Which chore uses a broom? 🧹',opts:['Wash the dishes','Sweep the floor','Cook dinner','Do the laundry'],ans:'Sweep the floor'},
+            {type:'selection',skill:'selection',q:'You use water and soap on the plates. You ___:',opts:['iron','cook','wash the dishes','sweep'],ans:'wash the dishes'},
+            {type:'fill',skill:'speaking',q:'You fix the sheets on your bed. You ___ the bed.',ans:'make'},
+            {type:'selection',skill:'selection',q:'Which chore uses a mop? 🪣',opts:['Cook','Iron','Mop the floor','Tidy up'],ans:'Mop the floor'},
+            {type:'selection',skill:'selection',q:'You put your toys away. You ___:',opts:['sweep','pick up the toys','cook','iron'],ans:'pick up the toys'},
+            {type:'fill',skill:'speaking',q:'You heat the stove and prepare food. You ___ dinner.',ans:'cook'},
+            {type:'selection',skill:'listening',q:'Which chore involves clothes and a hot tool?',opts:['Wash the dishes','Iron the clothes','Sweep the floor','Do the laundry'],ans:'Iron the clothes'},
+            {type:'selection',skill:'selection',q:'You put clothes in the washing machine. You ___:',opts:['cook','tidy up','do the laundry','dust'],ans:'do the laundry'},
+          ]
+        },
+        { id:'parts-house', title:'Parts of the House', icon:'🏡',
+          content:`<h3>Parts of the House 🏡</h3><p>Every room has a name. Learn them all!</p>
+          <div class="vocab-grid">
+            <div class="vocab-item">🛏️ <strong>Bedroom</strong> — where you sleep</div>
+            <div class="vocab-item">🚿 <strong>Bathroom</strong> — where you shower</div>
+            <div class="vocab-item">🍳 <strong>Kitchen</strong> — where you cook</div>
+            <div class="vocab-item">🛋️ <strong>Living room</strong> — where you relax</div>
+            <div class="vocab-item">🍽️ <strong>Dining room</strong> — where you eat</div>
+            <div class="vocab-item">🚗 <strong>Garage</strong> — where the car stays</div>
+            <div class="vocab-item">👕 <strong>Laundry room</strong> — where you wash clothes</div>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'Where do you sleep? 🛏️',opts:['Kitchen','Bathroom','Bedroom','Garage'],ans:'Bedroom'},
+            {type:'selection',skill:'selection',q:'Where do you cook? 🍳',opts:['Bedroom','Kitchen','Living room','Garage'],ans:'Kitchen'},
+            {type:'fill',skill:'speaking',q:'You watch TV on the sofa. This is the ___ room.',ans:'living'},
+            {type:'selection',skill:'listening',q:'Where does the car usually go?',opts:['Bedroom','Dining room','Bathroom','Garage'],ans:'Garage'},
+            {type:'selection',skill:'selection',q:'Where do you eat dinner with your family? 🍽️',opts:['Laundry room','Dining room','Bedroom','Garage'],ans:'Dining room'},
+            {type:'fill',skill:'speaking',q:'You take a shower in the ___.',ans:'bathroom'},
+          ]
+        },
+        { id:'sentences-chores', title:'Sentences with Chores', icon:'✏️',
+          content:`<h3>Sentences with Family Chores ✏️</h3>
+          <p><strong>Third person (he/she/my mom...):</strong> add -s or -es to the verb</p>
+          <div class="rule-box" style="background:#E8F5E9;border-left:4px solid #43A047">
+            <p>✅ My father <strong>washes</strong> the dishes.</p>
+            <p>✅ My brother <strong>sweeps</strong> the floor.</p>
+            <p>✅ My mother <strong>mops</strong> the floor.</p>
+          </div>
+          <p><strong>First person (I):</strong> use the base verb (no -s)</p>
+          <div class="rule-box" style="background:#E3F2FD;border-left:4px solid #1565C0">
+            <p>✅ I <strong>wash</strong> the dishes.</p>
+            <p>✅ I <strong>make</strong> my bed.</p>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'My father ___ the dishes.',opts:['wash','washes','washe','washing'],ans:'washes'},
+            {type:'selection',skill:'selection',q:'I ___ my bed every morning.',opts:['makes','make','making','maked'],ans:'make'},
+            {type:'fill',skill:'speaking',q:'My brother ___ the floor. (sweep)',ans:'sweeps'},
+            {type:'selection',skill:'selection',q:'My mother ___ the floor.',opts:['mop','mops','mopping','mopped'],ans:'mops'},
+            {type:'fill',skill:'speaking',q:'My grandma ___ dinner. (cook)',ans:'cooks'},
+            {type:'selection',skill:'listening',q:'Which sentence is correct?',opts:['He sweep the floor.','He sweeps the floor.','He sweeping the floor.','He sweeep the floor.'],ans:'He sweeps the floor.'},
+          ]
+        },
+        { id:'likes-dislikes', title:'Likes, Dislikes & "but"', icon:'👍',
+          content:`<h3>Likes & Dislikes 👍</h3>
+          <div class="rule-box" style="background:#E8F5E9;border-left:4px solid #43A047">
+            <p>✅ I <strong>like</strong> to sweep. &nbsp; I <strong>don't like</strong> to mop.</p>
+            <p>✅ My mom <strong>likes</strong> to cook. &nbsp; She <strong>doesn't like</strong> to iron.</p>
+          </div>
+          <p><strong>Connector: "but"</strong> — joins two opposite ideas</p>
+          <div class="rule-box" style="background:#E3F2FD;border-left:4px solid #1565C0">
+            <p>✅ I like to sweep <strong>but</strong> I don't like to mop.</p>
+            <p>✅ My mother likes to sweep <strong>but</strong> she doesn't like to mop.</p>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'I ___ to cook. (I enjoy it!)',opts:["don't like","doesn't like","like","likes"],ans:'like'},
+            {type:'selection',skill:'selection',q:'My mom ___ to mop. (she enjoys it)',opts:["like","don't like","doesn't like","likes"],ans:'likes'},
+            {type:'fill',skill:'speaking',q:"I like to sweep ___ I don't like to mop.",ans:'but'},
+            {type:'selection',skill:'selection',q:"My father ___ like to iron. (he hates it)",opts:["like","doesn't","don't","likes"],ans:"doesn't"},
+            {type:'selection',skill:'listening',q:'Which sentence uses "but" correctly?',opts:["I like cook but mop.","I like to cook but I don't like to mop.","I like cooking but mop not.","I likes to cook but I doesn't like mop."],ans:"I like to cook but I don't like to mop."},
+            {type:'fill',skill:'speaking',q:"My brother ___ like to sweep. (he hates it)",ans:"doesn't"},
+          ]
+        },
+        { id:'frequency-adverbs', title:'Frequency Adverbs', icon:'🔄',
+          content:`<h3>Frequency Adverbs 🔄</h3>
+          <p>These words tell us <em>how often</em> someone does something:</p>
+          <div class="rule-box" style="background:#E8F5E9;border-left:4px solid #43A047">
+            <p>✅ <strong>Always</strong> — 100% &nbsp; <em>I always pick up the toys.</em></p>
+            <p>✅ <strong>Sometimes</strong> — some of the time &nbsp; <em>My brother sometimes cleans the windows.</em></p>
+            <p>✅ <strong>Never</strong> — 0% &nbsp; <em>My brother never cooks dinner.</em></p>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'Emma ___ cleans her bedroom. (every day, 100%)',opts:['never','sometimes','always','usually'],ans:'always'},
+            {type:'selection',skill:'selection',q:"Emma's dad ___ mops the floor. (0%)",opts:['always','sometimes','never','usually'],ans:'never'},
+            {type:'fill',skill:'speaking',q:"Emma's brother ___ cleans the windows. (not always, not never)",ans:'sometimes'},
+            {type:'selection',skill:'listening',q:'Which sentence uses a frequency adverb correctly?',opts:['I always to sweep.','I sweep always.','I always sweep the floor.','Always I sweep.'],ans:'I always sweep the floor.'},
+            {type:'fill',skill:'speaking',q:"My brother ___ cooks dinner. (he never does it)",ans:'never'},
+          ]
+        },
+        { id:'question-words', title:'Question Words', icon:'❓',
+          content:`<h3>Question Words ❓</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item">👤 <strong>Who</strong> — person<br><em>"Who is your grandmother?"</em></div>
+            <div class="vocab-item">📦 <strong>What</strong> — thing<br><em>"What is the time?"</em></div>
+            <div class="vocab-item">📍 <strong>Where</strong> — place<br><em>"Where is my watch?"</em></div>
+            <div class="vocab-item">⏰ <strong>When</strong> — time<br><em>"When is your birthday?"</em></div>
+            <div class="vocab-item">❓ <strong>Why</strong> — reason<br><em>"Why is the room messed up?"</em></div>
+            <div class="vocab-item">🔢 <strong>How</strong> — manner<br><em>"How is Bingo the dog?"</em></div>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'"___ is your grandmother?" (asking about a person)',opts:['What','Where','Who','When'],ans:'Who'},
+            {type:'selection',skill:'selection',q:'"___ is the time?" (asking about a thing)',opts:['Who','Where','When','What'],ans:'What'},
+            {type:'selection',skill:'selection',q:'"___ is my watch?" (asking about a place)',opts:['Why','When','Where','How'],ans:'Where'},
+            {type:'selection',skill:'listening',q:'"___ is your birthday?" (asking about time)',opts:['Who','Where','What','When'],ans:'When'},
+            {type:'selection',skill:'selection',q:'"___ is the room messed up?" (asking for reason)',opts:['When','How','Why','What'],ans:'Why'},
+            {type:'fill',skill:'speaking',q:'"___ is Bingo the dog?" — asking about his state.',ans:'how'},
+          ]
+        },
+        { id:'word-families', title:'Word Family: -an', icon:'🔤',
+          content:`<h3>Meet the -an Family 🔤</h3>
+          <p>Words that rhyme with <strong>-an</strong>:</p>
+          <div class="vocab-grid">
+            <div class="vocab-item">🧑 <strong>man</strong></div>
+            <div class="vocab-item">🚐 <strong>van</strong></div>
+            <div class="vocab-item">🌬️ <strong>fan</strong></div>
+            <div class="vocab-item">🍳 <strong>pan</strong></div>
+            <div class="vocab-item">🥫 <strong>can</strong></div>
+            <div class="vocab-item">🏃 <strong>ran</strong></div>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'You cook eggs in a ___:',opts:['can','van','pan','fan'],ans:'pan'},
+            {type:'selection',skill:'selection',q:'A vehicle like a bus but smaller is a ___:',opts:['man','fan','can','van'],ans:'van'},
+            {type:'fill',skill:'speaking',q:"It blows air to cool you down. It's a ___.",ans:'fan'},
+            {type:'selection',skill:'listening',q:'Which word belongs to the -an family?',opts:['bin','sun','man','pen'],ans:'man'},
+            {type:'selection',skill:'selection',q:'You open a ___ to eat beans:',opts:['van','pan','ran','can'],ans:'can'},
+            {type:'fill',skill:'speaking',q:'He ___ very fast in the race. (run, past)',ans:'ran'},
+          ]
+        },
+        { id:'oral-exam-prep', title:'🎤 Oral Exam Preparation', icon:'🎤',
+          content:`<h3>Oral Exam — What You Must Do 🎤</h3>
+          <div class="rule-box" style="background:#E8F5E9;border-left:4px solid #43A047">
+            <p><strong>Part 1:</strong> 3 sentences — what 3 family members do</p>
+            <p><em>My mom mops the floor. My dad sweeps. I wash the dishes.</em></p>
+          </div>
+          <div class="rule-box" style="background:#E3F2FD;border-left:4px solid #1565C0">
+            <p><strong>Part 2:</strong> 3 preference sentences with "but"</p>
+            <p><em>I like to cook but I don't like to mop.</em></p>
+          </div>
+          <div class="rule-box" style="background:#FFF3E0;border-left:4px solid #E65100">
+            <p><strong>Part 3:</strong> 3 sentences with always / sometimes / never</p>
+            <p><em>I always pick up the toys. My brother never cooks.</em></p>
+          </div>
+          <p>📌 Poster with <strong>pictures only</strong> — no written words! &nbsp; 📌 Use <strong>11 chores</strong> total.</p>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'Part 1: Which sentence is correct?',opts:['My mom always like to mop.','My mom mops the floor.','My mom mopping the floor.','My mom mop the floor.'],ans:'My mom mops the floor.'},
+            {type:'selection',skill:'selection',q:'Part 2: Which uses "but" correctly?',opts:["I like cook but not mop.","I like to cook but I don't like to mop.","I likes to cook but doesn't like mop.","I like cooking but mop no."],ans:"I like to cook but I don't like to mop."},
+            {type:'fill',skill:'speaking',q:'Part 3: I ___ pick up the toys. (always)',ans:'always'},
+            {type:'selection',skill:'listening',q:'Your sister does the laundry every day. Say:',opts:['My sister sometimes does the laundry.','My sister never does the laundry.','My sister always does the laundry.','My sister do the laundry always.'],ans:'My sister always does the laundry.'},
+            {type:'selection',skill:'selection',q:'Can you write words on your poster?',opts:['Yes, anything','Yes, only chore names','No, pictures only','Yes, one word each'],ans:'No, pictures only'},
+            {type:'selection',skill:'selection',q:'How many chores must you use?',opts:['5','8','10','11'],ans:'11'},
+          ]
+        },
+      ]}
+    ]},
+
+    espanol: { units: [] },
+    math:    { units: [] },
+    sociales:{ units: [] },
+
+    ciencias: { units: [
+      { id:'ciencias-u1', title:'I Prueba — Ciencias 3.° año', theme:'Sistemas del Cuerpo Humano y Nutrición', topics: [
+
+        { id:'oseo', title:'Sistema Óseo', icon:'🦴',
+          content:`<h3>El Sistema Óseo 🦴</h3>
+          <div class="rule-box" style="background:#E3F2FD;border-left:4px solid #1565C0">
+            <p>El cuerpo humano tiene <strong>206 huesos</strong> clasificados según su forma:</p>
+          </div>
+          <div class="vocab-grid">
+            <div class="vocab-item">📏 <strong>Largos:</strong> Fémur, húmero, tibia, peroné, cúbito, radio</div>
+            <div class="vocab-item">🔲 <strong>Cortos:</strong> Falanges, tarsos</div>
+            <div class="vocab-item">🪟 <strong>Planos:</strong> Omoplato (escápula), pelvis</div>
+            <div class="vocab-item">🌙 <strong>Curvos:</strong> Costillas, cráneo</div>
+          </div>
+          <h3 style="margin-top:14px">Articulaciones</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item">🔒 <strong>Fijas:</strong> No permiten movimiento (cráneo)</div>
+            <div class="vocab-item">↔️ <strong>Semimóviles:</strong> Movimiento limitado (columna)</div>
+            <div class="vocab-item">🔄 <strong>Móviles:</strong> Gran rango (hombro, codo, muñeca)</div>
+          </div>
+          <h3 style="margin-top:14px">⚠️ Enfermedades</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item">🦴 <strong>Osteoporosis:</strong> Debilitamiento por falta de calcio</div>
+            <div class="vocab-item">💥 <strong>Fractura:</strong> Ruptura del hueso</div>
+            <div class="vocab-item">🔀 <strong>Luxación:</strong> Articulación fuera de lugar</div>
+            <div class="vocab-item">🔥 <strong>Artritis:</strong> Inflamación de articulaciones</div>
+          </div>
+          <div class="rule-box" style="background:#E8F5E9;border-left:4px solid #2E7D32;margin-top:12px">
+            <p><strong>✅ Cuidados:</strong> 15 min de sol diarios · Calcio · Ejercicio</p>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'¿Cuántos huesos tiene el cuerpo humano?',opts:['150 huesos','206 huesos','300 huesos','186 huesos'],ans:'206 huesos'},
+            {type:'selection',skill:'selection',q:'¿Cuál es un ejemplo de hueso LARGO?',opts:['Cráneo','Costillas','Fémur','Falanges'],ans:'Fémur'},
+            {type:'selection',skill:'selection',q:'¿Qué tipo de articulación es el CRÁNEO?',opts:['Móvil','Semimóvil','Fija','Libre'],ans:'Fija'},
+            {type:'selection',skill:'listening',q:'¿Qué enfermedad es el debilitamiento de los huesos por falta de calcio?',opts:['Artritis','Fractura','Osteoporosis','Luxación'],ans:'Osteoporosis'},
+            {type:'selection',skill:'selection',q:'¿Cuál es una medida para cuidar los huesos?',opts:['Tomar 15 min de sol al día','Comer mucha azúcar','Dormir todo el día','Evitar el ejercicio'],ans:'Tomar 15 min de sol al día'},
+            {type:'selection',skill:'selection',q:'¿Qué es una LUXACIÓN?',opts:['El hueso se rompe','La articulación se sale de su lugar y ligamentos se rompen','Inflamación de articulaciones','Debilitamiento óseo'],ans:'La articulación se sale de su lugar y ligamentos se rompen'},
+            {type:'fill',skill:'speaking',q:'El omoplato es un ejemplo de hueso ___.',ans:'plano'},
+            {type:'selection',skill:'selection',q:'Las costillas son un ejemplo de hueso...',opts:['largo','corto','plano','curvo'],ans:'curvo'},
+            {type:'selection',skill:'selection',q:'¿Cuál es una articulación MÓVIL?',opts:['Cráneo','Pelvis','Hombro','Vértebras'],ans:'Hombro'},
+            {type:'fill',skill:'speaking',q:'Las falanges y los tarsos son ejemplos de huesos ___.',ans:'cortos'},
+          ]
+        },
+
+        { id:'muscular', title:'Sistema Muscular', icon:'💪',
+          content:`<h3>El Sistema Muscular 💪</h3>
+          <div class="rule-box" style="background:#FCE4EC;border-left:4px solid #C62828">
+            <p>El cuerpo humano tiene <strong>más de 600 músculos</strong>.</p>
+          </div>
+          <h3 style="margin-top:12px">Tipos de movimiento</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item">✋ <strong>Voluntario:</strong> Lo decidimos (mover la mano)</div>
+            <div class="vocab-item">❤️ <strong>Involuntario:</strong> Funcionan solos (corazón, estómago)</div>
+          </div>
+          <h3 style="margin-top:12px">Músculos por zona</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item">😊 <strong>Cara:</strong> Más de 30 músculos</div>
+            <div class="vocab-item">💪 <strong>Superior:</strong> Pectorales, bíceps, abdominales</div>
+            <div class="vocab-item">🦵 <strong>Inferior:</strong> Femoral, glúteos</div>
+          </div>
+          <h3 style="margin-top:12px">⚠️ Lesiones</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item">🌀 <strong>Esguince:</strong> Articulación se tuerce sin dislocarse</div>
+            <div class="vocab-item">🩸 <strong>Desgarro:</strong> Ruptura muscular con hemorragia</div>
+            <div class="vocab-item">📉 <strong>Atrofia:</strong> Pérdida de masa muscular</div>
+          </div>
+          <div class="rule-box" style="background:#E8F5E9;border-left:4px solid #2E7D32;margin-top:12px">
+            <p><strong>✅ Cuidados:</strong> Calentar antes de ejercitar · Hidratarse · Ejercicio regular</p>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'¿Cuántos músculos hay en el cuerpo humano?',opts:['Más de 300','Más de 600','Exactamente 206','Más de 1000'],ans:'Más de 600'},
+            {type:'selection',skill:'listening',q:'¿El corazón es un músculo voluntario o involuntario?',opts:['Voluntario','Involuntario','Los dos','Ninguno'],ans:'Involuntario'},
+            {type:'selection',skill:'selection',q:'¿Qué es un ESGUINCE?',opts:['Ruptura total del músculo','La articulación se tuerce sin dislocarse','Pérdida de masa muscular','Inflamación de los huesos'],ans:'La articulación se tuerce sin dislocarse'},
+            {type:'selection',skill:'selection',q:'¿Cuál es la función principal del sistema muscular?',opts:['Proteger órganos internos','Permitir el movimiento y mantener la postura','Producir sangre','Filtrar toxinas'],ans:'Permitir el movimiento y mantener la postura'},
+            {type:'selection',skill:'selection',q:'¿Qué es la ATROFIA muscular?',opts:['Ruptura con hemorragia','Inflamación muscular','Pérdida de masa muscular por falta de ejercicio','Luxación'],ans:'Pérdida de masa muscular por falta de ejercicio'},
+            {type:'fill',skill:'speaking',q:'Para proteger los músculos, debemos ___ antes de hacer ejercicio.',ans:'calentar'},
+            {type:'selection',skill:'selection',q:'¿Cuál es un ejemplo de movimiento VOLUNTARIO?',opts:['El corazón late','El estómago digiere','Mover la mano','El intestino trabaja'],ans:'Mover la mano'},
+            {type:'selection',skill:'listening',q:'¿El DESGARRO implica ruptura muscular con hemorragia?',opts:['Sí, es correcto','No, es solo un esguince','No, es atrofia','Solo en atletas'],ans:'Sí, es correcto'},
+            {type:'selection',skill:'selection',q:'¿En la cara cuántos músculos aproximadamente tenemos?',opts:['Más de 10','Más de 30','Exactamente 20','Más de 100'],ans:'Más de 30'},
+            {type:'fill',skill:'speaking',q:'El desgarro implica una pequeña ruptura muscular acompañada de ___.',ans:'hemorragia'},
+          ]
+        },
+
+        { id:'digestivo', title:'Sistema Digestivo', icon:'🫁',
+          content:`<h3>El Sistema Digestivo 🫁</h3>
+          <p style="margin-bottom:10px">Convierte los alimentos en nutrientes que el cuerpo puede usar.</p>
+          <div class="vocab-grid">
+            <div class="vocab-item">👄 <strong>Boca:</strong> Tritura y humedece con saliva</div>
+            <div class="vocab-item">💧 <strong>Glándulas salivales:</strong> Producen saliva</div>
+            <div class="vocab-item">〰️ <strong>Esófago:</strong> Tubo hacia el estómago</div>
+            <div class="vocab-item">🫙 <strong>Estómago:</strong> Mezcla con jugos digestivos</div>
+            <div class="vocab-item">🟡 <strong>Intestino delgado:</strong> Absorbe nutrientes</div>
+            <div class="vocab-item">🟤 <strong>Intestino grueso:</strong> Absorbe agua</div>
+            <div class="vocab-item">🟠 <strong>Hígado:</strong> Produce bilis para grasas</div>
+          </div>
+          <h3 style="margin-top:12px">⚠️ Enfermedades</h3>
+          <div class="vocab-grid">
+            <div class="vocab-item">🦠 <strong>Cólera:</strong> Bacteria en agua contaminada</div>
+            <div class="vocab-item">🔥 <strong>Gastritis:</strong> Inflamación del estómago</div>
+            <div class="vocab-item">😣 <strong>Estreñimiento:</strong> Menos de 3 veces/semana</div>
+            <div class="vocab-item">🦷 <strong>Caries:</strong> Bacterias dañan los dientes</div>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'¿Cuál es la función de la boca en la digestión?',opts:['Absorber nutrientes','Triturar los alimentos y humedecerlos con saliva','Mezclar con jugos gástricos','Llevar la comida al estómago'],ans:'Triturar los alimentos y humedecerlos con saliva'},
+            {type:'selection',skill:'selection',q:'¿Qué hace el ESÓFAGO?',opts:['Produce jugos digestivos','Absorbe los nutrientes','Es el tubo que lleva la comida al estómago','Almacena la comida'],ans:'Es el tubo que lleva la comida al estómago'},
+            {type:'fill',skill:'speaking',q:'El ___ mezcla la comida con los jugos digestivos.',ans:'estómago'},
+            {type:'selection',skill:'selection',q:'¿Qué enfermedad es causada por bacteria en agua contaminada?',opts:['Gastritis','Caries','Cólera','Estreñimiento'],ans:'Cólera'},
+            {type:'selection',skill:'listening',q:'¿La gastritis puede causar úlceras si no se trata?',opts:['Sí, es correcto','No, nunca','Solo en adultos','Solo si hay cólera'],ans:'Sí, es correcto'},
+            {type:'selection',skill:'selection',q:'¿Para qué sirve el HÍGADO en la digestión?',opts:['Lleva comida al estómago','Almacena las heces','Produce bilis que ayuda a digerir las grasas','Absorbe el agua'],ans:'Produce bilis que ayuda a digerir las grasas'},
+            {type:'selection',skill:'selection',q:'¿Dónde se absorben los nutrientes principalmente?',opts:['Estómago','Intestino grueso','Intestino delgado','Boca'],ans:'Intestino delgado'},
+            {type:'selection',skill:'selection',q:'¿Cómo se previenen las CARIES?',opts:['Tomando mucha agua','Cepillándonos dientes regularmente y comiendo menos dulces','Comiendo fruta','Haciendo ejercicio'],ans:'Cepillándonos dientes regularmente y comiendo menos dulces'},
+            {type:'fill',skill:'speaking',q:'Las glándulas salivales producen ___ para humedecer los alimentos.',ans:'saliva'},
+            {type:'selection',skill:'listening',q:'El estreñimiento ocurre cuando es difícil ir al baño menos de...',opts:['una vez al día','dos veces a la semana','tres veces a la semana','cinco veces a la semana'],ans:'tres veces a la semana'},
+          ]
+        },
+
+        { id:'nutricion', title:'Nutrición', icon:'🥦',
+          content:`<h3>Nutrición 🥦</h3>
+          <p style="margin-bottom:10px">Los nutrientes son sustancias que el cuerpo necesita para funcionar bien.</p>
+          <div class="vocab-grid">
+            <div class="vocab-item">⚡ <strong>Carbohidratos:</strong> Fuente de energía.<br><em>Miel, frutas, papas, yuca, pan</em></div>
+            <div class="vocab-item">💪 <strong>Proteínas:</strong> Crecimiento y protección.<br><em>Leche, vegetales, frijoles, lentejas</em></div>
+            <div class="vocab-item">🥑 <strong>Lípidos:</strong> Almacenan energía.<br><em>Mayonesa, aguacate</em></div>
+            <div class="vocab-item">🍊 <strong>Vitaminas:</strong> Formación de tejidos.<br><em>Frutas, verduras, carnes</em></div>
+            <div class="vocab-item">🥛 <strong>Minerales:</strong> Desarrollo óseo y nervioso.<br><em>Legumbres, leche, frutos secos</em></div>
+          </div>`,
+          questions:[
+            {type:'selection',skill:'selection',q:'¿Cuál es la función principal de los CARBOHIDRATOS?',opts:['Construir músculos','Ser fuente de energía','Proteger los huesos','Regular la temperatura'],ans:'Ser fuente de energía'},
+            {type:'selection',skill:'selection',q:'¿Qué alimentos son ricos en PROTEÍNAS?',opts:['Miel, frutas y pan','Mayonesa y aguacate','Leche, vegetales, frijoles y lentejas','Solo la carne roja'],ans:'Leche, vegetales, frijoles y lentejas'},
+            {type:'selection',skill:'listening',q:'¿Los lípidos almacenan energía cuando faltan carbohidratos?',opts:['Sí, es correcto','No, eso lo hacen las vitaminas','No, son solo para el corazón','No tienen función energética'],ans:'Sí, es correcto'},
+            {type:'selection',skill:'selection',q:'¿Para qué sirven los MINERALES?',opts:['Son fuente de energía inmediata','Ayudan al desarrollo del sistema óseo y nervioso','Forman los músculos','Solo hidratan el cuerpo'],ans:'Ayudan al desarrollo del sistema óseo y nervioso'},
+            {type:'selection',skill:'selection',q:'¿Qué nutriente es esencial para el crecimiento y formación de tejidos?',opts:['Carbohidratos','Lípidos','Vitaminas','Minerales'],ans:'Vitaminas'},
+            {type:'fill',skill:'speaking',q:'La miel, las frutas, las papas, la yuca y el pan son fuentes de ___.',ans:'carbohidratos'},
+            {type:'selection',skill:'selection',q:'¿Las proteínas ayudan al crecimiento y protección del cuerpo?',opts:['Sí','No','Solo en adultos','Solo los minerales hacen eso'],ans:'Sí'},
+            {type:'selection',skill:'selection',q:'¿En qué alimentos se encuentran principalmente las VITAMINAS?',opts:['Pan, yuca y papas','Frutas, verduras y carnes','Mayonesa y aguacate','Solo en leche'],ans:'Frutas, verduras y carnes'},
+            {type:'fill',skill:'speaking',q:'La mayonesa y el aguacate son fuentes de ___ (grasas).',ans:'lípidos'},
+            {type:'selection',skill:'listening',q:'¿Cuál nutriente se encuentra en legumbres, leche y frutos secos?',opts:['Carbohidratos','Proteínas','Vitaminas','Minerales'],ans:'Minerales'},
+          ]
+        },
+
+      ]}
+    ]},
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  ANDRÉS — 1st Grade
+  // ══════════════════════════════════════════════════════════
+  andres: {
+    english:  { units: [ {
+        id: 'unit1',
+        title: 'Unit 1 — All About Me',
+        theme: 'Saying Hello! Saying Goodbye!',
+        essentialQuestion: 'How do I say hello and goodbye?',
+        status: 'active',
+        topics: [
+          {
+            id: 'greetings',
+            title: 'Greetings',
+            icon: '👋',
+            mode: 'picture', // triggers picture quiz
+            content: `
+              <h3>Greetings! 👋</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="text-align:center;font-size:18px">👋 <strong>Hi!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">👋 <strong>Hello!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">☀️ <strong>Good morning</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">🌤️ <strong>Good afternoon</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">🌙 <strong>Good evening</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">😊 <strong>I'm good!</strong></div>
+              </div>
+            `,
+            questions: [
+              { type:'picture', skill:'selection', q:'It is morning! ☀️ What do you say?', opts:[{e:'☀️',l:'Good morning'},{e:'🌙',l:'Good evening'},{e:'🌤️',l:'Good afternoon'},{e:'👋',l:'Goodbye'}], ans:'Good morning' },
+              { type:'picture', skill:'selection', q:'You see your friend! 😊 Say:', opts:[{e:'👋',l:'Hi!'},{e:'🌙',l:'Good night'},{e:'😢',l:'I\'m sad'},{e:'👋',l:'Goodbye'}], ans:'Hi!' },
+              { type:'picture', skill:'selection', q:'The moon is out! 🌙 You say:', opts:[{e:'☀️',l:'Good morning'},{e:'🌙',l:'Good evening'},{e:'🌤️',l:'Good afternoon'},{e:'👋',l:'Hello'}], ans:'Good evening' },
+              { type:'picture', skill:'selection', q:'Your teacher asks "How are you?" You say:', opts:[{e:'😊',l:"I'm good!"},{e:'😢',l:"I'm sad"},{e:'👋',l:'Goodbye'},{e:'🌙',l:'Good night'}], ans:"I'm good!" },
+              { type:'picture', skill:'selection', q:'It is afternoon ☀️🌤️. You say:', opts:[{e:'🌙',l:'Good evening'},{e:'☀️',l:'Good morning'},{e:'🌤️',l:'Good afternoon'},{e:'👋',l:'Hi'}], ans:'Good afternoon' },
+            ]
+          },
+          {
+            id: 'leavetakings',
+            title: 'Leave-Takings',
+            icon: '👋🏾',
+            mode: 'picture',
+            content: `
+              <h3>Say Goodbye! 👋🏾</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="text-align:center;font-size:18px">👋 <strong>Bye!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">🚌 <strong>Goodbye!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">🔜 <strong>See you!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">⏰ <strong>See you later!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">🌟 <strong>Have a nice day!</strong></div>
+              </div>
+            `,
+            questions: [
+              { type:'picture', skill:'selection', q:'School is over! 🚌 You say:', opts:[{e:'🚌',l:'Goodbye!'},{e:'☀️',l:'Good morning'},{e:'👋',l:'Hello'},{e:'😊',l:"I'm good"}], ans:'Goodbye!' },
+              { type:'picture', skill:'selection', q:'You will see your friend tomorrow. Say:', opts:[{e:'🌙',l:'Good night'},{e:'🔜',l:'See you later!'},{e:'☀️',l:'Good morning'},{e:'👋',l:'Hi!'}], ans:'See you later!' },
+              { type:'picture', skill:'selection', q:'Your teacher says — 🌟:', opts:[{e:'🌟',l:'Have a nice day!'},{e:'👋',l:'Hi!'},{e:'😢',l:"I'm sad"},{e:'🌙',l:'Good evening'}], ans:'Have a nice day!' },
+              { type:'picture', skill:'selection', q:'Which one means goodbye?', opts:[{e:'☀️',l:'Good morning'},{e:'👋',l:'Bye!'},{e:'😊',l:"I'm good"},{e:'🌤️',l:'Good afternoon'}], ans:'Bye!' },
+            ]
+          },
+          {
+            id: 'aboutme',
+            title: 'All About Me',
+            icon: '🙋',
+            mode: 'picture',
+            content: `
+              <h3>All About Me! 🙋</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="font-size:16px">📛 <strong>My name is Andrés</strong></div>
+                <div class="vocab-item" style="font-size:16px">🎂 <strong>I'm 6 years old</strong></div>
+                <div class="vocab-item" style="font-size:16px">🎒 <strong>Yes, I am a student</strong></div>
+                <div class="vocab-item" style="font-size:16px">✏️ <strong>I'm in first grade</strong></div>
+                <div class="vocab-item" style="font-size:16px">😊 <strong>I'm good</strong></div>
+              </div>
+            `,
+            questions: [
+              { type:'picture', skill:'selection', q:'"How old are you?" 🎂 You say:', opts:[{e:'6️⃣',l:'I\'m 6 years old'},{e:'1️⃣',l:'I\'m 1 year old'},{e:'🔟',l:'I\'m 10 years old'},{e:'8️⃣',l:'I\'m 8 years old'}], ans:"I'm 6 years old" },
+              { type:'picture', skill:'selection', q:'"Are you a student?" 🎒 You say:', opts:[{e:'✅',l:'Yes, I am'},{e:'❌',l:'No, I\'m not'},{e:'🤷',l:'I don\'t know'},{e:'😴',l:'I\'m tired'}], ans:'Yes, I am' },
+              { type:'picture', skill:'selection', q:'"What is your name?" You say:', opts:[{e:'📛',l:'My name is Andrés'},{e:'🌍',l:"I'm from Costa Rica"},{e:'😊',l:"I'm good"},{e:'🎒',l:'Yes, I am'}], ans:'My name is Andrés' },
+              { type:'picture', skill:'selection', q:'"How are you?" You answer:', opts:[{e:'😊',l:"I'm good"},{e:'🚌',l:'Goodbye'},{e:'☀️',l:'Good morning'},{e:'📛',l:'My name is Andrés'}], ans:"I'm good" },
+            ]
+          },
+          {
+            id: 'politeness',
+            title: 'Expressions of Politeness',
+            icon: '🤝',
+            mode: 'picture',
+            content: `
+              <h3>Be Polite! 🤝</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="text-align:center;font-size:16px">🙏 <strong>Thank you!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:16px">😊 <strong>You're welcome!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:16px">🙇 <strong>Excuse me!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:16px">🙏 <strong>Pardon me!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:16px">🤝 <strong>Nice to meet you!</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:16px">😊 <strong>Nice to meet you, too!</strong></div>
+              </div>
+            `,
+            questions: [
+              { type:'picture', skill:'selection', q:'Someone gives you a gift 🎁. You say:', opts:[{e:'🙏',l:'Thank you!'},{e:'👋',l:'Bye!'},{e:'😢',l:"I'm sad"},{e:'🌙',l:'Good evening'}], ans:'Thank you!' },
+              { type:'picture', skill:'selection', q:'You bump into someone. You say:', opts:[{e:'🙏',l:'Excuse me!'},{e:'🎉',l:'Good morning'},{e:'😊',l:"I'm good"},{e:'👋',l:'Hello'}], ans:'Excuse me!' },
+              { type:'picture', skill:'selection', q:'Someone says "Thank you!" You reply:', opts:[{e:'😊',l:"You're welcome!"},{e:'🚌',l:'Goodbye'},{e:'👋',l:'Hi'},{e:'😢',l:"I'm sad"}], ans:"You're welcome!" },
+              { type:'picture', skill:'selection', q:'You meet a new friend 🤝. You say:', opts:[{e:'🤝',l:'Nice to meet you!'},{e:'☀️',l:'Good morning'},{e:'👋',l:'Bye!'},{e:'🙏',l:'Pardon me'}], ans:'Nice to meet you!' },
+            ]
+          },
+          {
+            id: 'numbers',
+            title: 'Numbers 1–10',
+            icon: '🔢',
+            mode: 'picture',
+            content: `
+              <h3>Numbers! 🔢</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="text-align:center;font-size:20px">1️⃣ <strong>one</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">2️⃣ <strong>two</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">3️⃣ <strong>three</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">4️⃣ <strong>four</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">5️⃣ <strong>five</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">6️⃣ <strong>six</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">7️⃣ <strong>seven</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">8️⃣ <strong>eight</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">9️⃣ <strong>nine</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">🔟 <strong>ten</strong></div>
+              </div>
+            `,
+            questions: [
+              { type:'picture', skill:'selection', q:'🍎🍎🍎 How many apples?', opts:[{e:'2️⃣',l:'two'},{e:'3️⃣',l:'three'},{e:'4️⃣',l:'four'},{e:'1️⃣',l:'one'}], ans:'three' },
+              { type:'picture', skill:'selection', q:'⭐⭐⭐⭐⭐ How many stars?', opts:[{e:'4️⃣',l:'four'},{e:'6️⃣',l:'six'},{e:'5️⃣',l:'five'},{e:'3️⃣',l:'three'}], ans:'five' },
+              { type:'picture', skill:'selection', q:'🐸🐸 How many frogs?', opts:[{e:'1️⃣',l:'one'},{e:'2️⃣',l:'two'},{e:'3️⃣',l:'three'},{e:'4️⃣',l:'four'}], ans:'two' },
+              { type:'picture', skill:'selection', q:'🎈🎈🎈🎈🎈🎈🎈 How many balloons?', opts:[{e:'5️⃣',l:'five'},{e:'6️⃣',l:'six'},{e:'7️⃣',l:'seven'},{e:'8️⃣',l:'eight'}], ans:'seven' },
+              { type:'picture', skill:'selection', q:'🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟 How many?', opts:[{e:'8️⃣',l:'eight'},{e:'9️⃣',l:'nine'},{e:'🔟',l:'ten'},{e:'7️⃣',l:'seven'}], ans:'ten' },
+              { type:'picture', skill:'selection', q:'Which number is 8️⃣?', opts:[{e:'8️⃣',l:'eight'},{e:'6️⃣',l:'six'},{e:'9️⃣',l:'nine'},{e:'7️⃣',l:'seven'}], ans:'eight' },
+            ]
+          },
+          {
+            id: 'feelings',
+            title: 'My Feelings',
+            icon: '😊',
+            mode: 'picture',
+            content: `
+              <h3>How do you feel? 😊</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="text-align:center;font-size:20px">😢 <strong>sad</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">😨 <strong>scared</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">😪 <strong>tired</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">😠 <strong>angry</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:20px">😊 <strong>good / happy</strong></div>
+              </div>
+            `,
+            questions: [
+              { type:'picture', skill:'selection', q:'You are crying 😢. You feel:', opts:[{e:'😢',l:'sad'},{e:'😠',l:'angry'},{e:'😊',l:'good'},{e:'😪',l:'tired'}], ans:'sad' },
+              { type:'picture', skill:'selection', q:'There is a monster! 👻 You feel:', opts:[{e:'😊',l:'good'},{e:'😢',l:'sad'},{e:'😨',l:'scared'},{e:'😠',l:'angry'}], ans:'scared' },
+              { type:'picture', skill:'selection', q:'You didn\'t sleep. 😪 You feel:', opts:[{e:'😠',l:'angry'},{e:'😪',l:'tired'},{e:'😊',l:'good'},{e:'😢',l:'sad'}], ans:'tired' },
+              { type:'picture', skill:'selection', q:'Someone broke your toy! You feel:', opts:[{e:'😊',l:'good'},{e:'😨',l:'scared'},{e:'😪',l:'tired'},{e:'😠',l:'angry'}], ans:'angry' },
+              { type:'picture', skill:'selection', q:'You got a gold star ⭐. You feel:', opts:[{e:'😢',l:'sad'},{e:'😊',l:'good'},{e:'😨',l:'scared'},{e:'😠',l:'angry'}], ans:'good' },
+            ]
+          },
+          {
+            id: 'letters',
+            title: 'Letters A, L, S, T',
+            icon: '🔤',
+            mode: 'picture',
+            content: `
+              <h3>Letters & Sounds! 🔤</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="text-align:center;font-size:18px">🅰️ <strong>A</strong> — 🐊 alligator, 🐜 ant</div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">🦁 <strong>L</strong> — 🍋 lemon, 🦁 lion</div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">🐍 <strong>S</strong> — 🐍 snake, 6️⃣ six</div>
+                <div class="vocab-item" style="text-align:center;font-size:18px">🪑 <strong>T</strong> — 🪑 table, 🔟 ten</div>
+              </div>
+            `,
+            questions: [
+              { type:'picture', skill:'selection', q:'🐊 Alligator starts with:', opts:[{e:'🅰️',l:'A'},{e:'🦁',l:'L'},{e:'🐍',l:'S'},{e:'🪑',l:'T'}], ans:'A' },
+              { type:'picture', skill:'selection', q:'🦁 Lion starts with:', opts:[{e:'🅰️',l:'A'},{e:'🦁',l:'L'},{e:'🐍',l:'S'},{e:'🪑',l:'T'}], ans:'L' },
+              { type:'picture', skill:'selection', q:'🐍 Snake starts with:', opts:[{e:'🅰️',l:'A'},{e:'🦁',l:'L'},{e:'🐍',l:'S'},{e:'🪑',l:'T'}], ans:'S' },
+              { type:'picture', skill:'selection', q:'🪑 Table starts with:', opts:[{e:'🅰️',l:'A'},{e:'🦁',l:'L'},{e:'🐍',l:'S'},{e:'🪑',l:'T'}], ans:'T' },
+              { type:'picture', skill:'selection', q:'🐜 Ant starts with:', opts:[{e:'🅰️',l:'A'},{e:'🦁',l:'L'},{e:'🐍',l:'S'},{e:'🪑',l:'T'}], ans:'A' },
+              { type:'picture', skill:'selection', q:'🍋 Lemon starts with:', opts:[{e:'🅰️',l:'A'},{e:'🦁',l:'L'},{e:'🐍',l:'S'},{e:'🪑',l:'T'}], ans:'L' },
+            ]
+          },
+        ]
+      }
+] },
+    espanol:  { units: [] },
+    math:     { units: [] },
+    sociales: { units: [] },
+    ciencias: { units: [] },
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  FERNANDO — Pre-Kinder
+  // ══════════════════════════════════════════════════════════
+  fernando: {
+    english:  { units: [
+      {
+        id: 'unit1',
+        title: 'Unit 1 — My World',
+        theme: 'Colors, Animals & Numbers',
+        essentialQuestion: 'What do I see around me?',
+        status: 'active',
+        topics: [
+          {
+            id: 'colors',
+            title: 'Colors 🎨',
+            icon: '🎨',
+            mode: 'tap', // tap-the-picture mode
+            content: `
+              <h3 style="text-align:center">Colors! 🎨</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="text-align:center;font-size:28px">🔴 <br><strong>red</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🔵 <br><strong>blue</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🟡 <br><strong>yellow</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🟢 <br><strong>green</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🟠 <br><strong>orange</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🟣 <br><strong>purple</strong></div>
+              </div>
+            `,
+            questions: [
+              { type:'tap', skill:'selection', q:'Tap RED! 🔴', opts:[{e:'🔴',l:'red'},{e:'🔵',l:'blue'},{e:'🟡',l:'yellow'}], ans:'red' },
+              { type:'tap', skill:'selection', q:'Tap BLUE! 🔵', opts:[{e:'🟢',l:'green'},{e:'🔵',l:'blue'},{e:'🟠',l:'orange'}], ans:'blue' },
+              { type:'tap', skill:'selection', q:'Tap YELLOW! 🌟', opts:[{e:'🟣',l:'purple'},{e:'🔴',l:'red'},{e:'🟡',l:'yellow'}], ans:'yellow' },
+              { type:'tap', skill:'selection', q:'Tap GREEN! 🌿', opts:[{e:'🟢',l:'green'},{e:'🔵',l:'blue'},{e:'🟠',l:'orange'}], ans:'green' },
+              { type:'tap', skill:'selection', q:'Tap ORANGE! 🍊', opts:[{e:'🔴',l:'red'},{e:'🟡',l:'yellow'},{e:'🟠',l:'orange'}], ans:'orange' },
+              { type:'tap', skill:'selection', q:'Tap PURPLE! 🍇', opts:[{e:'🟣',l:'purple'},{e:'🟢',l:'green'},{e:'🔵',l:'blue'}], ans:'purple' },
+            ]
+          },
+          {
+            id: 'animals',
+            title: 'Animals 🐾',
+            icon: '🐾',
+            mode: 'tap',
+            content: `
+              <h3 style="text-align:center">Animals! 🐾</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="text-align:center;font-size:28px">🐶<br><strong>dog</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🐱<br><strong>cat</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🐸<br><strong>frog</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🐦<br><strong>bird</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🐠<br><strong>fish</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🦁<br><strong>lion</strong></div>
+              </div>
+            `,
+            questions: [
+              { type:'tap', skill:'selection', q:'Tap the DOG! 🐶', opts:[{e:'🐱',l:'cat'},{e:'🐶',l:'dog'},{e:'🐸',l:'frog'}], ans:'dog' },
+              { type:'tap', skill:'selection', q:'Tap the CAT! 🐱', opts:[{e:'🐶',l:'dog'},{e:'🐱',l:'cat'},{e:'🦁',l:'lion'}], ans:'cat' },
+              { type:'tap', skill:'selection', q:'Tap the FROG! 🐸', opts:[{e:'🐠',l:'fish'},{e:'🐦',l:'bird'},{e:'🐸',l:'frog'}], ans:'frog' },
+              { type:'tap', skill:'selection', q:'Tap the BIRD! 🐦', opts:[{e:'🐦',l:'bird'},{e:'🐶',l:'dog'},{e:'🐱',l:'cat'}], ans:'bird' },
+              { type:'tap', skill:'selection', q:'Tap the FISH! 🐠', opts:[{e:'🦁',l:'lion'},{e:'🐠',l:'fish'},{e:'🐸',l:'frog'}], ans:'fish' },
+              { type:'tap', skill:'selection', q:'Tap the LION! 🦁', opts:[{e:'🐱',l:'cat'},{e:'🐦',l:'bird'},{e:'🦁',l:'lion'}], ans:'lion' },
+            ]
+          },
+          {
+            id: 'numbers-pk',
+            title: 'Numbers 1–5 🔢',
+            icon: '🔢',
+            mode: 'tap',
+            content: `
+              <h3 style="text-align:center">Numbers 1 to 5! 🔢</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="text-align:center;font-size:32px">1️⃣<br><strong>one</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:32px">2️⃣<br><strong>two</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:32px">3️⃣<br><strong>three</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:32px">4️⃣<br><strong>four</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:32px">5️⃣<br><strong>five</strong></div>
+              </div>
+            `,
+            questions: [
+              { type:'tap', skill:'selection', q:'🍎 ONE apple! Tap 1:', opts:[{e:'1️⃣',l:'one'},{e:'2️⃣',l:'two'},{e:'3️⃣',l:'three'}], ans:'one' },
+              { type:'tap', skill:'selection', q:'🐶🐶 TWO dogs! Tap 2:', opts:[{e:'3️⃣',l:'three'},{e:'1️⃣',l:'one'},{e:'2️⃣',l:'two'}], ans:'two' },
+              { type:'tap', skill:'selection', q:'⭐⭐⭐ THREE stars! Tap 3:', opts:[{e:'4️⃣',l:'four'},{e:'3️⃣',l:'three'},{e:'5️⃣',l:'five'}], ans:'three' },
+              { type:'tap', skill:'selection', q:'🎈🎈🎈🎈 FOUR balloons! Tap 4:', opts:[{e:'2️⃣',l:'two'},{e:'4️⃣',l:'four'},{e:'5️⃣',l:'five'}], ans:'four' },
+              { type:'tap', skill:'selection', q:'🌸🌸🌸🌸🌸 FIVE flowers! Tap 5:', opts:[{e:'4️⃣',l:'four'},{e:'3️⃣',l:'three'},{e:'5️⃣',l:'five'}], ans:'five' },
+            ]
+          },
+          {
+            id: 'shapes',
+            title: 'Shapes 🔷',
+            icon: '🔷',
+            mode: 'tap',
+            content: `
+              <h3 style="text-align:center">Shapes! 🔷</h3>
+              <div class="vocab-grid">
+                <div class="vocab-item" style="text-align:center;font-size:28px">🔴<br><strong>circle</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🔷<br><strong>square</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🔺<br><strong>triangle</strong></div>
+                <div class="vocab-item" style="text-align:center;font-size:28px">🟥<br><strong>rectangle</strong></div>
+              </div>
+            `,
+            questions: [
+              { type:'tap', skill:'selection', q:'Tap the CIRCLE! ⚪', opts:[{e:'🔺',l:'triangle'},{e:'⚪',l:'circle'},{e:'🟦',l:'square'}], ans:'circle' },
+              { type:'tap', skill:'selection', q:'Tap the TRIANGLE! 🔺', opts:[{e:'🔺',l:'triangle'},{e:'⚪',l:'circle'},{e:'🟥',l:'rectangle'}], ans:'triangle' },
+              { type:'tap', skill:'selection', q:'Tap the SQUARE! 🟦', opts:[{e:'⚪',l:'circle'},{e:'🟦',l:'square'},{e:'🔺',l:'triangle'}], ans:'square' },
+              { type:'tap', skill:'selection', q:'Tap the RECTANGLE! 🟥', opts:[{e:'🟦',l:'square'},{e:'⚪',l:'circle'},{e:'🟥',l:'rectangle'}], ans:'rectangle' },
+            ]
+          },
+        ]
+      }
+    ] },
+    espanol:  { units: [] },
+    math:     { units: [] },
+    sociales: { units: [] },
+    ciencias: { units: [] },
+  },
+};
+
+// ── Progress helpers ─────────────────────────────────────────
+function getSessions() { try { return JSON.parse(localStorage.getItem('school_sessions')||'[]'); } catch { return []; } }
+function saveSessions(s) { localStorage.setItem('school_sessions', JSON.stringify(s)); }
+function recordSession(session) { const s=getSessions(); s.unshift(session); if(s.length>200)s.pop(); saveSessions(s); }
+function getTopicBest(sid,subj,tid) { try { return JSON.parse(localStorage.getItem('school_progress')||'{}')[sid]?.[subj]?.[tid]??null; } catch { return null; } }
+function setTopicBest(sid,subj,tid,pct) {
+  const p = JSON.parse(localStorage.getItem('school_progress')||'{}');
+  if(!p[sid])p[sid]={}; if(!p[sid][subj])p[sid][subj]={};
+  p[sid][subj][tid] = Math.max(p[sid][subj][tid]??0, pct);
+  localStorage.setItem('school_progress', JSON.stringify(p));
+}
+
+// ── State ────────────────────────────────────────────────────
+let state = { student:null, subjectId:null, unit:null, topic:null, questions:[], qIndex:0, scores:{listening:0,speaking:0,selection:0}, counts:{listening:0,speaking:0,selection:0}, answered:false };
+
+// ── Screen management ─────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── HOME ──────────────────────────────────────────────────────
+function renderHome() {
+  document.getElementById('home-student-grid').innerHTML = STUDENTS.map(st=>`
+    <button class="student-card" style="--accent:${st.color}" onclick="selectStudent('${st.id}')">
+      <span class="sc-avatar">${st.avatar}</span>
+      <span class="sc-name">${st.name}</span>
+      <span class="sc-grade">${st.grade}</span>
+    </button>`).join('');
+}
+function selectStudent(id) { state.student=STUDENTS.find(s=>s.id===id); renderSubjects(); showScreen('subjects'); }
+function goHome() { state.student=null; state.subjectId=null; state.unit=null; state.topic=null; showScreen('home'); }
+
+// ── SUBJECTS ──────────────────────────────────────────────────
+function renderSubjects() {
+  const st=state.student;
+  document.getElementById('subj-avatar').textContent=st.avatar;
+  document.getElementById('subj-name').textContent=st.name;
+  document.getElementById('subj-grade').textContent=st.grade;
+  const studentContent = CONTENT[st.id] || {};
+  document.getElementById('subj-grid').innerHTML = SUBJECTS_META.map(subj=>{
+    const hasContent = studentContent[subj.id]?.units?.length > 0;
+    return `<button class="subject-card" style="--accent:${subj.color};--accent-light:${subj.colorLight}"
+      onclick="selectSubject('${subj.id}')" ${!hasContent?'style="opacity:0.55"':''}>
+      <span class="sj-emoji">${subj.icon}</span>
+      <span class="sj-label">${subj.name}</span>
+      <span class="sj-desc">${hasContent?'Disponible':'Próximamente'}</span>
+    </button>`;
+  }).join('');
+}
+function selectSubject(sid) { state.subjectId=sid; renderTopics(); showScreen('topics'); }
+function goSubjects() { state.unit=null; state.topic=null; renderSubjects(); showScreen('subjects'); }
+
+// ── TOPICS ────────────────────────────────────────────────────
+function renderTopics() {
+  const sid=state.subjectId;
+  const subjMeta = SUBJECTS_META.find(s=>s.id===sid);
+  const studentContent = CONTENT[state.student.id]?.[sid] || { units:[] };
+  document.getElementById('topics-unit-title').textContent = subjMeta.icon+' '+subjMeta.name;
+  document.getElementById('topics-unit-theme').textContent = studentContent.units[0]?.theme || '';
+  document.getElementById('topics-unit-eq').textContent = '';
+  const list = document.getElementById('topic-list');
+
+  const allTopics = studentContent.units.flatMap(u=>u.topics||[]);
+  if (!allTopics.length) {
+    list.innerHTML='<p style="color:var(--muted);text-align:center;padding:40px 0">Contenido próximamente.</p>';
+    return;
+  }
+  list.innerHTML = allTopics.map(topic=>{
+    const best = getTopicBest(state.student.id, sid, topic.id);
+    const badge = best!==null
+      ? `<span class="topic-badge" style="background:${best>=80?'#dcfce7':best>=50?'#fef9c3':'#fee2e2'};color:${best>=80?'#166534':best>=50?'#92400e':'#991b1b'}">${best}%</span>`
+      : `<span class="topic-badge" style="background:#f1f5f9;color:#64748b">Nuevo</span>`;
+    return `<button class="topic-item" style="--accent:${subjMeta.color}" onclick="selectTopic('${topic.id}')">
+      <span class="ti-emoji">${topic.icon}</span>
+      <div class="ti-info">
+        <span class="ti-title">${topic.title}</span>
+        <span class="ti-theme">${topic.questions?.length||0} preguntas</span>
+      </div>${badge}
+    </button>`;
+  }).join('');
+}
+function selectTopic(tid) {
+  const sid=state.subjectId;
+  const allTopics = (CONTENT[state.student.id]?.[sid]?.units||[]).flatMap(u=>u.topics||[]);
+  state.topic = allTopics.find(t=>t.id===tid);
+  renderStudy(); showScreen('study');
+}
+function goToTopics() { renderTopics(); showScreen('topics'); }
+
+// ── STUDY ─────────────────────────────────────────────────────
+function renderStudy() {
+  const t=state.topic;
+  document.getElementById('study-title').textContent=t.icon+' '+t.title;
+  document.getElementById('study-content').innerHTML=t.content||'<p>Notas próximamente.</p>';
+}
+function startQuiz() {
+  const t=state.topic;
+  if(!t?.questions?.length){ alert('No hay preguntas disponibles.'); return; }
+  state.questions=[...t.questions].sort(()=>Math.random()-0.5).slice(0,8);
+  state.qIndex=0;
+  state.scores={listening:0,speaking:0,selection:0};
+  state.counts={listening:0,speaking:0,selection:0};
+  state.answered=false;
+  document.getElementById('quiz-topic-label').textContent=t.icon+' '+t.title;
+  document.getElementById('quiz-score').textContent='0';
+  renderQuestion(); showScreen('quiz');
+}
+
+// ── QUIZ ──────────────────────────────────────────────────────
+function renderQuestion() {
+  const q=state.questions[state.qIndex], total=state.questions.length;
+  state.answered=false;
+  document.getElementById('quiz-qnum').textContent=`Question ${state.qIndex+1} of ${total}`;
+  document.getElementById('quiz-progress').style.width=(state.qIndex/total*100)+'%';
+  document.getElementById('quiz-feedback').innerHTML='';
+  document.getElementById('quiz-feedback').className='feedback-bar';
+  document.getElementById('quiz-next').style.display='none';
+  let html=`<div class="q-text">${q.q}</div>`;
+  if(q.type==='selection') {
+    html+=`<div class="quiz-options">${q.opts.map((o,i)=>`
+      <button class="quiz-opt" data-idx="${i}" onclick="handleAnswer(${i})">
+        <span class="quiz-opt-letter">${String.fromCharCode(65+i)}</span><span>${o}</span>
+      </button>`).join('')}</div>`;
+  } else {
+    html+=`<div class="quiz-fill-row">
+      <input class="quiz-fill-input" id="quiz-fill" type="text" placeholder="Type your answer..." onkeydown="if(event.key==='Enter')handleFill()">
+      <button class="quiz-check-btn" onclick="handleFill()">✔ Check</button>
+    </div>`;
+  }
+  document.getElementById('q-card').innerHTML=html;
+}
+
+function totalScore() { return Object.values(state.scores).reduce((a,b)=>a+b,0); }
+
+function handleAnswer(chosen) {
+  if(state.answered)return; state.answered=true;
+  const q=state.questions[state.qIndex];
+  const correct=q.opts[chosen]===q.ans;
+  state.counts[q.skill]=(state.counts[q.skill]||0)+1;
+  if(correct) state.scores[q.skill]=(state.scores[q.skill]||0)+1;
+  document.querySelectorAll('.quiz-opt').forEach((btn,i)=>{
+    btn.disabled=true;
+    if(q.opts[i]===q.ans)btn.classList.add('correct');
+    else if(i===chosen&&!correct)btn.classList.add('wrong');
+  });
+  showFeedback(correct, correct?`✅ Correct! "${q.ans}"`:`❌ The answer is: "${q.ans}"`);
+  document.getElementById('quiz-score').textContent=totalScore();
+}
+function handleFill() {
+  if(state.answered)return;
+  const inp=document.getElementById('quiz-fill'); if(!inp)return;
+  const val=inp.value.trim().toLowerCase(); if(!val)return;
+  state.answered=true;
+  const q=state.questions[state.qIndex];
+  const correct=val===q.ans.toLowerCase()||val.includes(q.ans.toLowerCase());
+  state.counts[q.skill]=(state.counts[q.skill]||0)+1;
+  if(correct)state.scores[q.skill]=(state.scores[q.skill]||0)+1;
+  inp.disabled=true; inp.classList.add(correct?'correct':'wrong');
+  document.querySelector('.quiz-check-btn').disabled=true;
+  showFeedback(correct, correct?`✅ Correct! "${q.ans}"`:`❌ The answer is: "${q.ans}"`);
+  document.getElementById('quiz-score').textContent=totalScore();
+}
+function showFeedback(correct, msg) {
+  const fb=document.getElementById('quiz-feedback');
+  fb.className='feedback-bar show '+(correct?'ok':'fail');
+  fb.innerHTML=msg;
+  document.getElementById('quiz-next').style.display='block';
+}
+function nextQuestion() {
+  state.qIndex++;
+  if(state.qIndex>=state.questions.length) finishQuiz();
+  else renderQuestion();
+}
+function finishQuiz() {
+  const total=state.questions.length;
+  const correct=totalScore();
+  const pct=Math.round(correct/total*100);
+  setTopicBest(state.student.id, state.subjectId, state.topic.id, pct);
+  recordSession({ student:state.student.name, subject:state.subjectId, topic:state.topic.title, correct, total, pct,
+    listening:state.scores.listening, speaking:state.scores.speaking, selection:state.scores.selection,
+    lTotal:state.counts.listening, sTotal:state.counts.speaking, selTotal:state.counts.selection,
+    date:new Date().toISOString() });
+  const emoji=pct>=90?'🏆':pct>=70?'🎉':pct>=50?'😊':'💪';
+  const msg=pct>=90?'Excellent! Ready for the exam!':pct>=70?'Great job! Keep practicing.':pct>=50?'Good try! Review and come back.':'Don\'t give up! Study the notes.';
+  document.getElementById('res-emoji').textContent=emoji;
+  document.getElementById('res-score').textContent=`${correct} / ${total}`;
+  document.getElementById('res-msg').textContent=msg;
+  const lPct=state.counts.listening?Math.round(state.scores.listening/state.counts.listening*100)+'%':'—';
+  const sPct=state.counts.speaking?Math.round(state.scores.speaking/state.counts.speaking*100)+'%':'—';
+  const selPct=state.counts.selection?Math.round(state.scores.selection/state.counts.selection*100)+'%':'—';
+  document.getElementById('sk-listening').textContent=lPct;
+  document.getElementById('sk-speaking').textContent=sPct;
+  document.getElementById('sk-selection').textContent=selPct;
+  document.getElementById('quiz-progress').style.width='100%';
+  showScreen('results');
+}
+function retryQuiz() { startQuiz(); }
+
+// ── TRACKER ───────────────────────────────────────────────────
+let trackerFilter='all';
+function showTracker() { renderTracker(); showScreen('tracker'); }
+function setTrackerFilter(id) { trackerFilter=id; renderTracker(); }
+function clearHistory() {
+  if(!confirm('Clear all progress history?'))return;
+  localStorage.removeItem('school_sessions'); localStorage.removeItem('school_progress');
+  renderTracker();
+}
+function renderTracker() {
+  const sessions=getSessions();
+  const filtered=trackerFilter==='all'?sessions:sessions.filter(s=>s.student===STUDENTS.find(st=>st.id===trackerFilter)?.name);
+  document.getElementById('t-sessions').textContent=filtered.length;
+  const best=filtered.length?Math.max(...filtered.map(s=>s.pct))+'%':'—';
+  const avg=filtered.length?Math.round(filtered.reduce((a,s)=>a+s.pct,0)/filtered.length)+'%':'—';
+  document.getElementById('t-best').textContent=best;
+  document.getElementById('t-avg').textContent=avg;
+  const topicMap={};
+  filtered.forEach(s=>{ if(!topicMap[s.topic])topicMap[s.topic]={sum:0,n:0,title:s.topic}; topicMap[s.topic].sum+=s.pct; topicMap[s.topic].n++; });
+  const weak=Object.values(topicMap).map(t=>({...t,avg:Math.round(t.sum/t.n)})).filter(t=>t.avg<70).sort((a,b)=>a.avg-b.avg)[0];
+  document.getElementById('t-weak').textContent=weak?weak.title:'—';
+  document.getElementById('tracker-filters').innerHTML=`
+    <button class="filter-btn ${trackerFilter==='all'?'active':''}" onclick="setTrackerFilter('all')">All</button>
+    ${STUDENTS.map(st=>`<button class="filter-btn ${trackerFilter===st.id?'active':''}" onclick="setTrackerFilter('${st.id}')">${st.avatar} ${st.name}</button>`).join('')}`;
+  const perf=document.getElementById('tracker-performance');
+  if(!Object.keys(topicMap).length){ perf.innerHTML='<p style="color:var(--muted);text-align:center;padding:20px 0">No data yet.</p>'; }
+  else { perf.innerHTML=Object.values(topicMap).map(t=>{ const a=Math.round(t.sum/t.n),c=a>=80?'#22c55e':a>=50?'#eab308':'#ef4444'; return `<div class="perf-row"><span class="perf-label">${t.title}</span><div class="perf-bg"><div class="perf-fill" style="width:${a}%;background:${c}"></div></div><span class="perf-pct" style="color:${c}">${a}%</span></div>`; }).join(''); }
+  const tbody=document.getElementById('tracker-tbody');
+  if(!filtered.length){ tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--muted)">No sessions yet.</td></tr>'; return; }
+  tbody.innerHTML=filtered.map(s=>{
+    const d=new Date(s.date),ds=d.toLocaleDateString('en',{month:'short',day:'numeric'});
+    const status=s.pct>=80?'✅':s.pct>=50?'⚠️':'❌';
+    return `<tr><td>${ds}</td><td>${s.student}</td><td>${s.topic}</td><td><strong>${s.correct}/${s.total}</strong></td>
+      <td>${s.lTotal?Math.round(s.listening/s.lTotal*100)+'%':'—'}</td>
+      <td>${s.sTotal?Math.round(s.speaking/s.sTotal*100)+'%':'—'}</td>
+      <td>${s.selTotal?Math.round(s.selection/s.selTotal*100)+'%':'—'}</td>
+      <td>${status}</td></tr>`;
+  }).join('');
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+renderHome();
+showScreen('home');
+</script>
 <script src="js/app.js"></script>
 </body>
 </html>
