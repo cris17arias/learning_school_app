@@ -1029,7 +1029,8 @@ function renderStudy() {
 function startQuiz() {
   const t=state.topic;
   if(!t?.questions?.length){ alert('No hay preguntas disponibles.'); return; }
-  state.questions=[...t.questions].sort(()=>Math.random()-0.5).slice(0,8);
+  // AFTER — uses all questions in the topic
+  state.questions = [...t.questions].sort(() => Math.random() - 0.5);
   state.qIndex=0;
   state.scores={listening:0,speaking:0,selection:0};
   state.counts={listening:0,speaking:0,selection:0};
