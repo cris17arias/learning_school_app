@@ -19,7 +19,7 @@
 //           - Batalla de Santa Rosa (20 de marzo)
 // ============================================================
 
-CONTENT.andres.estudiosSociales = {
+CONTENT.andres.sociales = {
   units: [
 
     // ══════════════════════════════════════════════════════
