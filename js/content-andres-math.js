@@ -7,11 +7,13 @@
 //  Nota: Solo preguntas de selección y completar con números.
 //  Andrés tiene 6 años — sin respuestas escritas complejas.
 //
-//  Temas (Marzo–Abril 2026):
+//  Temas (Marzo–Abril–Mayo 2026):
 //  1. Números en el entorno — para qué sirven los números
 //  2. Comparación de objetos — posición relativa
 //  3. Contar y cardinalidad — números del 1 al 20
-//  4. Números ordinales — primero al décimo
+//  4. Números ordinales — primero al décimo (énfasis actual:
+//     ejercicios de relacionar animales en fila y colorear
+//     elementos en posición 5°, 7°, 10°)
 //  5. Agrupamientos — de 1 en 1, 2 en 2, 3 en 3, 5 en 5
 //  6. Representaciones de números — literal, numérica, gráfica
 //  7. Unidades y Decenas — decenas del 10 al 20
@@ -166,18 +168,34 @@ CONTENT.andres.math = {
             <div class="rule-box" style="background:#FFF9C4;border-left:4px solid #F9A825;margin-top:10px">
               <p>En una fila de niños: 👦👧👦👧</p>
               <p>→ 1° primero, 2° segundo, 3° tercero, 4° cuarto</p>
+            </div>
+            <div class="rule-box" style="background:#F3E5F5;border-left:4px solid #7B1FA2;margin-top:8px">
+              <p>🐹🐷🐥🐰🐝🐳 <strong>Animalitos en fila</strong></p>
+              <p>1° hámster · 2° cerdito · 3° pollito · 4° conejo · 5° abeja · 6° ballena</p>
             </div>`,
           questions: [
             { type:'selection', skill:'selection', q:'¿Cómo se dice el número ordinal 1°?', opts:['segundo','tercero','cuarto','primero'], ans:'primero' },
+            { type:'selection', skill:'selection', q:'¿Cómo se dice el número ordinal 2°?', opts:['primero','tercero','segundo','cuarto'], ans:'segundo' },
             { type:'selection', skill:'selection', q:'¿Cómo se dice el número ordinal 3°?', opts:['segundo','cuarto','tercero','quinto'], ans:'tercero' },
-            { type:'selection', skill:'selection', q:'El cerdito está de ___ lugar. (2°)', opts:['primer','cuarto','tercer','segundo'], ans:'segundo' },
-            { type:'selection', skill:'listening', q:'El conejo está de ___ lugar. (4°)', opts:['tercero','quinto','cuarto','sexto'], ans:'cuarto' },
-            { type:'selection', skill:'selection', q:'La ballena está de ___ lugar. (6°)', opts:['quinto','séptimo','cuarto','sexto'], ans:'sexto' },
-            { type:'selection', skill:'selection', q:'El pollito está de ___ lugar. (3°)', opts:['primero','cuarto','segundo','tercero'], ans:'tercero' },
+            { type:'selection', skill:'selection', q:'¿Cómo se dice el número ordinal 4°?', opts:['quinto','cuarto','tercero','sexto'], ans:'cuarto' },
+            { type:'selection', skill:'selection', q:'¿Cómo se dice el número ordinal 5°?', opts:['cuarto','sexto','quinto','séptimo'], ans:'quinto' },
+            { type:'selection', skill:'selection', q:'¿Cómo se dice el número ordinal 6°?', opts:['quinto','séptimo','sexto','octavo'], ans:'sexto' },
+            { type:'selection', skill:'selection', q:'El cerdito está de ___ lugar. 🐷 (2°)', opts:['primer','cuarto','tercer','segundo'], ans:'segundo' },
+            { type:'selection', skill:'listening', q:'El conejo está de ___ lugar. 🐰 (4°)', opts:['tercero','quinto','cuarto','sexto'], ans:'cuarto' },
+            { type:'selection', skill:'selection', q:'La ballena está de ___ lugar. 🐳 (6°)', opts:['quinto','séptimo','cuarto','sexto'], ans:'sexto' },
+            { type:'selection', skill:'selection', q:'El pollito está de ___ lugar. 🐥 (3°)', opts:['primero','cuarto','segundo','tercero'], ans:'tercero' },
+            { type:'selection', skill:'selection', q:'El hámster está de ___ lugar. 🐹 (1°)', opts:['segundo','primer','tercer','cuarto'], ans:'primer' },
+            { type:'selection', skill:'selection', q:'La abeja está de ___ lugar. 🐝 (5°)', opts:['cuarto','sexto','tercer','quinto'], ans:'quinto' },
+            { type:'selection', skill:'selection', q:'Colorea la 5° cámara 📷📷📷📷📸📷📷📷. ¿Cuál pintaste?', opts:['La cuarta','La quinta','La sexta','La tercera'], ans:'La quinta' },
+            { type:'selection', skill:'selection', q:'Colorea la 7° flor 🌸🌸🌸🌸🌸🌸🌷🌸. ¿Cuál pintaste?', opts:['La sexta','La octava','La séptima','La quinta'], ans:'La séptima' },
+            { type:'selection', skill:'selection', q:'Colorea el 10° lápiz ✏️✏️✏️✏️✏️✏️✏️✏️✏️🖍️. ¿Cuál pintaste?', opts:['El noveno','El octavo','El décimo','El séptimo'], ans:'El décimo' },
             { type:'fill', skill:'speaking', q:'El 5° lugar se dice: ___.', ans:'quinto' },
+            { type:'fill', skill:'speaking', q:'El 7° lugar se dice: ___.', ans:'septimo' },
+            { type:'fill', skill:'speaking', q:'El 10° lugar se dice: ___.', ans:'decimo' },
             { type:'selection', skill:'selection', q:'¿Cuál es el número ordinal de "décimo"?', opts:['8°','9°','10°','7°'], ans:'10°' },
             { type:'selection', skill:'listening', q:'Si coloreas el 7° elemento, ¿cuál número ordinal es?', opts:['quinto','octavo','sexto','séptimo'], ans:'séptimo' },
-            { type:'selection', skill:'selection', q:'¿Cómo se dice el número ordinal 2°?', opts:['primero','tercero','segundo','cuarto'], ans:'segundo' },
+            { type:'selection', skill:'selection', q:'En una fila: 4° Cuarto, 3° Tercero, 2° Segundo, 1° Primero. ¿Quién va al frente?', opts:['El cuarto','El segundo','El primero','El tercero'], ans:'El primero' },
+            { type:'selection', skill:'selection', q:'¿Qué número viene después del 8°?', opts:['7°','10°','9°','6°'], ans:'9°' },
           ]
         },
 
