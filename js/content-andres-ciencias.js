@@ -2,9 +2,14 @@
 //  content-andres-ciencias.js
 //  Ciencias — Andrés · Primer Grado
 //  Escuela Ramón Barrantes Herrera
+//  Maestra: Licda. Elizabeth Vargas Cruz
 //
-//  Temas extraídos del cuaderno de Andrés:
+//  Notas: Solo preguntas de selección y completar simples.
+//  Andrés tiene 6 años — sin respuestas escritas complejas.
+//
+//  Temas extraídos del cuaderno de Andrés (Abril–Mayo 2026):
 //  Unidad 1: Hábitos de Higiene y Alimentación Saludable
+//           (alineado con apuntes manuscritos del cuaderno)
 //  Unidad 2: Los Sentidos
 //  Unidad 3: Partes del Cuerpo
 // ============================================================
@@ -85,6 +90,8 @@ CONTENT.andres.ciencias = {
             { type:'selection', skill:'selection', q:'¿Qué alimento viene del pescado? 🐟', opts:['Hamburguesa','Pescado','Chocolate','Helado'], ans:'Pescado' },
             { type:'selection', skill:'selection', q:'Las verduras ayudan a nuestro cuerpo a estar ___.', opts:['Débil','Fuerte','Sucio','Dormido'], ans:'Fuerte' },
             { type:'selection', skill:'selection', q:'¿Cuál alimento viene de la gallina? 🥚', opts:['Queso','Huevo','Pescado','Manzana'], ans:'Huevo' },
+            { type:'selection', skill:'selection', q:'¿Cuál NO es un alimento saludable?', opts:['Pollo','Confites','Verduras','Leche'], ans:'Confites' },
+            { type:'selection', skill:'selection', q:'¿Cuál NO debemos comer mucho?', opts:['Frutas','Pescado','Frituras','Huevos'], ans:'Frituras' },
             { type:'fill', skill:'math', q:'Si Andrés come 2 manzanas y luego 1 más, tiene ___ manzanas.', ans:'3' },
             { type:'fill', skill:'math', q:'Si hay 5 verduras y Andrés come 2, quedan ___ verduras.', ans:'3' }
           ]
