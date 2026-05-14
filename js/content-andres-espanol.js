@@ -46,12 +46,12 @@ CONTENT.andres.espanol = {
             </div>`,
           questions: [
             { type:'selection', skill:'selection', q:'¿Qué sonido hace la vaca? 🐄', opts:['wiu wiu','pum pum','muuu','chu chu'], ans:'muuu' },
-            { type:'selection', skill:'selection', q:'¿Qué sonido hace el tambor? 🥁', opts:['muuu','pum pum','ploc ploc','dong dong'], ans:'pum pum' },
-            { type:'fill', skill:'speaking', q:'La lluvia hace el sonido: ___ ___.', ans:'ploc ploc' },
+            { type:'selection', skill:'selection', q:'¿Qué sonido hace el tambor? 🥁', opts:['muuu','pum pum','ploc ploc','ding dong'], ans:'pum pum' },
+            { type:'selection', skill:'speaking', q:'La lluvia hace el sonido: ___ ___.', opts:['muuu','pum pum','shhhhhh','ding dong'], ans:'shhhhhh' },
             { type:'selection', skill:'listening', q:'¿Qué vehículo hace el sonido "wiu wiu"?', opts:['El tren','La vaca','La ambulancia','El tambor'], ans:'La ambulancia' },
             { type:'selection', skill:'selection', q:'¿Qué sonido hace el tren? 🚂', opts:['muuu','dong dong','chu chu','pum pum'], ans:'chu chu' },
-            { type:'fill', skill:'speaking', q:'La policía y la ambulancia hacen el sonido: ___ ___.', ans:'wiu wiu' },
-            { type:'selection', skill:'selection', q:'¿Qué sonido hace la iglesia? ⛪', opts:['chu chu','dong dong','muuu','ploc ploc'], ans:'dong dong' },
+            { type:'selection', skill:'speaking', q:'La policía y la ambulancia hacen el sonido: ___ ___.', opts:['muuu','wiu wiu','chu chu','pum pum'], ans:'wiu wiu' },
+            { type:'selection', skill:'selection', q:'¿Qué sonido hace la iglesia? ⛪', opts:['chu chu','ding ding','muuu','ploc ploc'], ans:'ding ding' },
             { type:'selection', skill:'listening', q:'¿Qué sonido hace el toro Indalecio?', opts:['oink oink','miau miau','guau guau','muuu'], ans:'muuu' },
           ]
         },
@@ -80,10 +80,10 @@ CONTENT.andres.espanol = {
           questions: [
             { type:'selection', skill:'selection', q:'¿Qué significa la señal ALTO? 🛑', opts:['Sigue adelante','Debes parar','Dobla a la derecha','Corre rápido'], ans:'Debes parar' },
             { type:'selection', skill:'selection', q:'¿Dónde podemos encontrar señales?', opts:['Solo en el mar','Solo en casa','En la calle, restaurantes y escuelas','Solo en los parques'], ans:'En la calle, restaurantes y escuelas' },
-            { type:'fill', skill:'speaking', q:'La señal con una "M" dorada es de ___.', ans:'McDonald\'s' },
+            { type:'selection', skill:'speaking', q:'La señal con una "M" dorada es de ___.',opts:['Restaurante','Burger King','Mamá','McDonald\'s'], ans:'McDonald\'s' },
             { type:'selection', skill:'listening', q:'¿Qué nos indica la señal de zona escolar? 🚸', opts:['Hay un hospital','Hay niños cruzando','No se permite comer','Dobla aquí'], ans:'Hay niños cruzando' },
             { type:'selection', skill:'selection', q:'¿Para qué sirven las señales?', opts:['Para decorar','Para dar información importante','Para confundir a la gente','Solo para los adultos'], ans:'Para dar información importante' },
-            { type:'fill', skill:'speaking', q:'La señal con un perro tachado significa: no se permiten ___.', ans:'mascotas' },
+            { type:'selection', skill:'speaking', q:'La señal con un perro tachado significa: no se permiten ___.', opts:['adultos','niños','perros','mascotas'],  ans:'mascotas' },
             { type:'selection', skill:'selection', q:'¿Qué tipo de lugar tiene señales de hombres y mujeres? 🚹🚺', opts:['La cocina','Los baños','La sala','El garaje'], ans:'Los baños' },
             { type:'selection', skill:'listening', q:'¿Qué representa la Torre Eiffel?', opts:['Un restaurante','Un hospital','Un monumento','Una señal de tráfico'], ans:'Un monumento' },
           ]
